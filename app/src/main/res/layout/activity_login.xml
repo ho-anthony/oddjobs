@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
-    tools:context=".MainActivity">
+    tools:context=".LoginActivity">
 
     <LinearLayout
+        android:id="@+id/loginLayout"
         android:layout_width="409dp"
         android:layout_height="729dp"
         android:gravity="center"
@@ -20,23 +21,26 @@
             android:id="@+id/logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="40dip"
             app:srcCompat="@android:drawable/sym_def_app_icon" />
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dip"
-            android:text="@string/login_button"
-            android:background="@color/tealButton"/>
+            android:layout_marginBottom="20dip"
+            android:background="@color/tealButton"
+            android:onClick="loginClicked"
+            android:text="@string/login_button" />
 
         <Button
             android:id="@+id/signUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:text="@string/sign_up_button"
-            android:background="@color/yellowButton"/>
+            android:layout_marginBottom="20dip"
+            android:background="@color/yellowButton"
+            android:onClick="signUpClicked"
+            android:text="@string/sign_up_button" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
