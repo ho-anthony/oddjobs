@@ -2,4 +2,6 @@
     <string name="app_name">Odd Jobs 2</string>
     <string name="login_button">Login</string>
     <string name="sign_up_button">Sign Up</string>
+    <string name="work_request_button">I Need Help</string>
+    <string name="work_search_button">I Need $$</string>
 </resources>

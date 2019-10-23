@@ -2,6 +2,7 @@ package com.example.oddjobs2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.opengl.Visibility;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void showTextEntries(View v) {
-        EditText emailInput = new EditText(this);
+        final EditText emailInput = new EditText(this);
         TextView emailHeader = new TextView(this);
         emailHeader.setText("Email:");
         layout.addView(emailHeader);
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView passwordHeader = new TextView(this);
         passwordHeader.setText("Password:");
         layout.addView(passwordHeader);
-        EditText passwordInput = new EditText(this);
+        final EditText passwordInput = new EditText(this);
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordInput.setBackgroundColor(Color.WHITE);
         layout.addView(passwordInput);
@@ -62,24 +63,37 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(), "Log User In", Toast.LENGTH_LONG).show();
+                    if(emailInput.getText().toString().trim().equals("") ||
+                            passwordInput.getText().toString().trim().equals("")) {
+                        Toast.makeText(getApplicationContext(), "Please fill in your info", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
+                        startActivity(intent);
+                    }
                 }
             });
         }
         if(signUp) {
-            signUpButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(), "Create Account", Toast.LENGTH_LONG).show();
-                }
-            });
             TextView passConfirmHeader = new TextView(this);
             passConfirmHeader.setText("Confirm Password:");
             layout.addView(passConfirmHeader);
-            EditText passwordConfirm = new EditText(this);
+            final EditText passwordConfirm = new EditText(this);
             passwordConfirm.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             passwordConfirm.setBackgroundColor(Color.WHITE);
             layout.addView(passwordConfirm);
+            signUpButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(emailInput.getText().toString().trim().equals("") ||
+                            passwordInput.getText().toString().trim().equals("") ||
+                            passwordConfirm.getText().toString().trim().equals("")) {
+                        Toast.makeText(getApplicationContext(), "Please fill in your info", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
     }
 
