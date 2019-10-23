@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -20,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     Button loginButton;
     Button signUpButton;
     boolean signUp = false;
+    boolean logIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginClicked(View v) {
         signUpButton.setVisibility(View.GONE);
+        logIn = true;
         showTextEntries(v);
 
     }
@@ -55,7 +58,21 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordInput.setBackgroundColor(Color.WHITE);
         layout.addView(passwordInput);
+        if(logIn) {
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "Log User In", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
         if(signUp) {
+            signUpButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "Create Account", Toast.LENGTH_LONG).show();
+                }
+            });
             TextView passConfirmHeader = new TextView(this);
             passConfirmHeader.setText("Confirm Password:");
             layout.addView(passConfirmHeader);
