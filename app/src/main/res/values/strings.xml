@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Odd Jobs 2</string>
-
     <string name="profile_header">Profile</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -8,9 +7,7 @@
     <string name="email">E-mail</string>
     <string name="phone_number">Phone Number</string>
     <string name="key_words">Key Words About Yourself</string>
-
     <string name="jobList_header">Job List</string>
-
     <string name="jobDescription_header">Job Description</string>
     <string name="job_name">Name of Job:</string>
     <string name="jobPoster_name">Job Posters Name:</string>
@@ -18,4 +15,8 @@
     <string name="amount_offered">Amount Offered:</string>
     <string name="contact_info">Contact Information:</string>
     <string name="potential_workers">Potential Workers:</string>
+    <string name="login_button">Login</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="work_request_button">I Need Help</string>
+    <string name="work_search_button">I Need $$</string>
 </resources>
