@@ -30,13 +30,16 @@
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_add" />
 
-        <LinearLayout
+        <ScrollView
             android:id="@+id/job_list_box"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:orientation="vertical">
+            android:layout_height="400dp">
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 
         <ImageButton
             android:id="@+id/load_jobs"
