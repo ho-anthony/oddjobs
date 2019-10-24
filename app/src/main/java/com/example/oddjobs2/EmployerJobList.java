@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class JobListActivity extends AppCompatActivity {
+public class EmployerJobList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

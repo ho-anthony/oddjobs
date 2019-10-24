@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".JobDescriptionActivity"></activity>
-        <activity android:name=".JobListActivity" />
+        <activity android:name=".EmployerJobList" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
