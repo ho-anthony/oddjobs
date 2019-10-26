@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.os.Bundle;
 
-public class JobpostActivity extends AppCompatActivity {
+public class JobPostActivity extends AppCompatActivity {
 
     EditText jobTitle, jobCost, jobDescription;
     Button postJob;
@@ -16,7 +16,7 @@ public class JobpostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jobpost);
+        setContentView(R.layout.activity_job_post);
         jobTitle = findViewById(R.id.job_title);
         jobCost = findViewById(R.id.job_cost);
         jobDescription = findViewById(R.id.job_description);
