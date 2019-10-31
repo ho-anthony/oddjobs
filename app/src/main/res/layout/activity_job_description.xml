@@ -63,19 +63,25 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/potentialWorkers"
+            android:id="@+id/skillsNeeded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/potential_workers"
+            android:text="@string/skills_needed"
             android:textSize="24sp" />
 
-        <ListView
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/skill_set"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:alignContent="stretch"
+            app:alignItems="stretch"
+            app:flexWrap="wrap">
+
+        </com.google.android.flexbox.FlexboxLayout>
+
     </LinearLayout>
 </android.widget.LinearLayout>

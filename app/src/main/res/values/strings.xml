@@ -14,9 +14,18 @@
     <string name="job_description">Job Description:</string>
     <string name="amount_offered">Amount Offered:</string>
     <string name="contact_info">Contact Information:</string>
-    <string name="potential_workers">Potential Workers:</string>
+    <string name="skills_needed">Skills Needed:</string>
     <string name="login_button">Login</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="work_request_button">I Need Help</string>
     <string name="work_search_button">I Need $$</string>
+    <string name="title_word">Title:</string>
+    <string name="cost_word">Cost:</string>
+    <string name="job_word">Job</string>
+    <string name="job_description_word">Job Description:</string>
+    <string name="search_word">Search:</string>
+    <string name="post_job_button">Post Job</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_job_list">Job List</string>
 </resources>

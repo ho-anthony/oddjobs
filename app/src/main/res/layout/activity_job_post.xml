@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:gravity="center"
-            android:text="Job" />
+            android:text="@string/job_word" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:gravity="center"
-                android:text="Title:" />
+                android:text="@string/title_word" />
 
             <EditText
                 android:id="@+id/job_title"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:gravity="center"
-                android:text="Cost:" />
+                android:text="@string/cost_word" />
 
             <EditText
                 android:id="@+id/job_cost"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:gravity="center"
-            android:text="Job Description:" />
+            android:text="@string/job_description_word" />
 
         <EditText
             android:id="@+id/job_description"
@@ -102,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Search:" />
+                    android:text="@string/search_word" />
 
                 <SearchView
                     android:layout_width="match_parent"
@@ -138,7 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Post Job" />
+            android:text="@string/post_job_button" />
 
 
     </LinearLayout>

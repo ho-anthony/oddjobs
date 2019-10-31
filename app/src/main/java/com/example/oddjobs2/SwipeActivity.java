@@ -2,7 +2,11 @@ package com.example.oddjobs2;
 
 import java.util.*;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,6 +40,34 @@ public class SwipeActivity extends AppCompatActivity {
 
         pullUserData();
     }
+
+    // https://developer.android.com/guide/topics/ui/menus
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.base_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_profile:
+                startActivity(new Intent(this, ProfileActivity.class));
+                return true;
+            case R.id.menu_job_list:
+                startActivity(new Intent(this, JobListActivity.class));
+                return true;
+            case R.id.menu_settings:
+                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
     public void pullUserData() {
         //Pull next user data from database
