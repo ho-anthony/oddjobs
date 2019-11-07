@@ -73,7 +73,7 @@
             android:textSize="24sp" />
 
         <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/skill_set"
+            android:id="@+id/skill_set_frag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
