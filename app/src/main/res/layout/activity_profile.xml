@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".ProfileActivity">
 
     <LinearLayout
         android:id="@+id/profileLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
@@ -25,7 +30,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/profilePicture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -57,7 +62,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -65,11 +70,11 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:hint="@string/age"
+            android:inputType="number" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -77,8 +82,8 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:ems="10"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/location"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/phone_number"
@@ -104,5 +109,14 @@
             android:gravity="start|top"
             android:hint="@string/key_words"
             android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/profileSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:text="@string/submit_button"
+            android:onClick="submitProfile"/>
     </LinearLayout>
 </android.widget.LinearLayout>
+    </ScrollView>
