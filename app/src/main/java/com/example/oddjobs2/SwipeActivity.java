@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,8 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SwipeActivity extends AppCompatActivity {
 
-    private ImageView userPhoto;
-    private TextView userName, userAge, userGender, userLocation, userBio;
+    private LinearLayout base;
     private FlexboxLayout skillSet;
 
     // Source: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
@@ -30,15 +31,22 @@ public class SwipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
-        userPhoto = findViewById(R.id.user_photo);
-        userName = findViewById(R.id.user_name);
-        userAge = findViewById(R.id.user_age);
-        userGender = findViewById(R.id.user_gender);
-        userLocation = findViewById(R.id.user_location);
-        userBio = findViewById(R.id.user_bio);
-        skillSet = findViewById(R.id.skill_set);
 
-        pullUserData();
+        base = findViewById(R.id.linear_layout_swipe);
+        skillSet = findViewById(R.id.skill_set_swipe);
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            if(extras.getString("userChoice").equals("workRequest")){
+                pullUserData();
+            }
+            else if(extras.getString("userChoice").equals("workSearch")){
+                pullJobData();
+            }
+            else{
+                //throw some exception
+            }
+        }
     }
 
     // https://developer.android.com/guide/topics/ui/menus
@@ -70,50 +78,58 @@ public class SwipeActivity extends AppCompatActivity {
 
 
     public void pullUserData() {
-        //Pull next user data from database
-        //This function is called when user swipes screen or when app first loads.
-        //Hardcoded for now.
-        userName.setText("Next User");
-        userAge.setText("40");
-        userGender.setText("F");
-        userLocation.setText("Santa Cruz");
-        String long_test_text = "Testing a looooooooooooooooooooooooooooooo" +
-                "00000000000000000000000000000000000000000000000000" +
-                "00000000000000000000000000000000000000000000000000" +
-                "00000000000000000000000000000000000000000000000000" +
-                "00000000000000000000000000000000000000000000000000" +
-                "00000000000000000000000000000000000000000000000000" +
-                "ong bio";
-        userBio.setText(long_test_text);
-
-        //This list is added to https://github.com/google/flexbox-layout
+        String name = "Bob Smith";
+        String age = "35";
+        String bio = "Hello I am Bob Smith, looking for work!";
         List<String> skills = new ArrayList<String>();
         skills.add("fishing");
-        skills.add("biking");
-        skills.add("car repair");
-        skills.add("flying");
-        skills.add("a very long skill, just to test");
-        skills.add("burping");
+        skills.add("drawing");
+        skills.add("surfing");
+
+        TextView userName = new TextView(getApplicationContext());
+        userName.setText("Name: " + name);
+        TextView userAge = new TextView(getApplicationContext());
+        userAge.setText("Age: " + age);
+        TextView userBio = new TextView(getApplicationContext());
+        userBio.setText("Bio: " + bio);
+
+        displaySkills(skills);
+
+        base.addView(userName);
+        base.addView(userAge);
+        base.addView(userBio);
+
+    }
+
+    public void pullJobData(){
+        String title = "Toilet plumber";
+        String price = "$100";
+        String bio = "Looking for toilet plumber!";
+        List<String> skills = new ArrayList<String>();
         skills.add("fishing");
-        skills.add("a very long skill, just to test");
-        skills.add("burping");
-        skills.add("car repair");
-        skills.add("flying");
-        skills.add("a very long skill, just to test");
-        skills.add("burping");
-        skills.add("fishing");
-        skills.add("a very long skill, just to test");
-        skills.add("burping");
-        skills.add("fishing");
-        skills.add("biking");
-        skills.add("fishing");
-        skills.add("biking");
-        skills.add("fishing");
-        skills.add("biking");
+        skills.add("drawing");
+        skills.add("surfing");
+
+        TextView jobTitle = new TextView(getApplicationContext());
+        jobTitle.setText("Title: " + title);
+        TextView jobPrice = new TextView(getApplicationContext());
+        jobPrice.setText("Price: " + price);
+        TextView jobBio = new TextView(getApplicationContext());
+        jobBio.setText("Bio: " + bio);
+
+        displaySkills(skills);
+
+        base.addView(jobTitle);
+        base.addView(jobPrice);
+        base.addView(jobBio);
+    }
+
+    public void displaySkills(List<String> skills){
 
         int counter = 0;
         for(String skill : skills){
             TextView skill_text = new TextView(getApplicationContext());
+
             skill_text.setText(skill);
             if(counter%2==0){
                 //Alternate colors.
