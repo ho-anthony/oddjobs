@@ -8,6 +8,8 @@ import android.opengl.Visibility;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,12 +65,11 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(emailInput.getText().toString().trim().equals("") ||
-                            passwordInput.getText().toString().trim().equals("")) {
-                        Toast.makeText(getApplicationContext(), "Please fill in your info", Toast.LENGTH_SHORT).show();
-                    } else {
+                    if(isValidEmail(emailInput.getText())) {
                         Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
                         startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please enter a valid email address/password", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -84,17 +85,21 @@ public class LoginActivity extends AppCompatActivity {
             signUpButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(emailInput.getText().toString().trim().equals("") ||
-                            passwordInput.getText().toString().trim().equals("") ||
-                            passwordConfirm.getText().toString().trim().equals("")) {
-                        Toast.makeText(getApplicationContext(), "Please fill in your info", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
+                    if(isValidEmail(emailInput.getText())
+                            && !passwordInput.getText().toString().trim().equals("")
+                            && passwordInput.getText().toString().trim().equals(passwordConfirm.getText().toString().trim())) {
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                         startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please enter a valid email address/password", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
+    }
+
+    public boolean isValidEmail(CharSequence input) {
+        return (!TextUtils.isEmpty(input) && Patterns.EMAIL_ADDRESS.matcher(input).matches());
     }
 
 }
