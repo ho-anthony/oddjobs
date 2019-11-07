@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#ff8c00">
+
+
+    <EditText
+        android:id="@+id/popup_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        android:hint="Job Title"/>
+
+    <EditText
+        android:id="@+id/popup_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        android:hint="Job Description"/>
+
+    <EditText
+        android:id="@+id/popup_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        android:hint="Job Pay"/>
+
+    <EditText
+        android:id="@+id/popup_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        android:hint="Job Location"/>
+
+    <Button
+        android:id="@+id/popup_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        android:hint="Post Job"/>
+
+</android.widget.LinearLayout>
