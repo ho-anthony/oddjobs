@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(isValidEmail(emailInput.getText())
                             && !passwordInput.getText().toString().trim().equals("")
                             && passwordInput.getText().toString().trim().equals(passwordConfirm.getText().toString().trim())) {
-                        Intent intent = new Intent(getApplicationContext(), ProfileCreationActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                         startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), "Please enter a valid email address/password", Toast.LENGTH_SHORT).show();
