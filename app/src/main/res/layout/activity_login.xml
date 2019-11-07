@@ -11,7 +11,7 @@
         android:id="@+id/loginLayout"
         android:layout_width="409dp"
         android:layout_height="729dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingHorizontal="50dip"
         tools:layout_editor_absoluteX="1dp"
@@ -21,8 +21,9 @@
             android:id="@+id/logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dip"
-            app:srcCompat="@android:drawable/sym_def_app_icon" />
+            android:layout_marginTop="70dip"
+            android:layout_marginBottom="30dip"
+            app:srcCompat="@drawable/logo" />
 
         <Button
             android:id="@+id/loginButton"
