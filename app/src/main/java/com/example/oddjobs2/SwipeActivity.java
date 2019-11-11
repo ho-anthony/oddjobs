@@ -62,13 +62,13 @@ public class SwipeActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_profile:
-                startActivity(new Intent(this, ProfileActivity.class));
+                startActivity(new Intent(this, ViewProfile.class));
                 return true;
             case R.id.menu_job_list:
                 startActivity(new Intent(this, JobListActivity.class));
                 return true;
             case R.id.menu_settings:
-                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

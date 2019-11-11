@@ -1,54 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ff8c00">
+    android:background="@drawable/popup_border">
 
-
-    <EditText
-        android:id="@+id/popup_title"
+    <android.widget.LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Title"/>
+        android:orientation="vertical"
+        android:layout_margin="15dp"
+        android:background="@drawable/popup_shape">
 
-    <EditText
-        android:id="@+id/popup_des"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Description"/>
+        <EditText
+            android:id="@+id/popup_title"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="22sp"
+            android:hint="@string/job_title"/>
 
-    <EditText
-        android:id="@+id/popup_pay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Pay"/>
+        <EditText
+            android:id="@+id/popup_des"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="22sp"
+            android:hint="@string/job_des"/>
 
-    <EditText
-        android:id="@+id/popup_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Location"/>
+        <EditText
+            android:id="@+id/popup_pay"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="22sp"
+            android:hint="@string/job_pay"/>
 
-    <Button
-        android:id="@+id/popup_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Post Job"/>
+        <EditText
+            android:id="@+id/popup_location"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="22sp"
+            android:hint="@string/job_loc"/>
+
+        <Button
+            android:id="@+id/popup_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="22sp"
+            android:text="@string/post_job_button"/>
+
+    </android.widget.LinearLayout>
 
 </android.widget.LinearLayout>
+</ScrollView>

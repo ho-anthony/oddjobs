@@ -2,6 +2,7 @@ package com.example.oddjobs2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -28,8 +30,16 @@ public class JobListActivity extends AppCompatActivity {
     Button post;
     EditText title, des, pay, location;
     ListView listView;
-    TextView text;
-    ArrayList<String> catalogue = new ArrayList<>();
+    static TextView text;
+    //ArrayList<String> catalogue = new ArrayList<>();
+    ArrayList<DataModel> catalogue = new ArrayList<>();
+    static MyCustomAdapter adapter;
+
+    public static void checkEmpty() {
+        if(adapter.getCount() == 0){
+            text.setText(R.string.no_jobs);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +77,36 @@ public class JobListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         String t, d, p, l;
-                        t = title.getText().toString();
-                        d = des.getText().toString();
-                        p = pay.getText().toString();
-                        l = location.getText().toString();
-                        // Do something with the information
-                        String info = t + "\n" + d + "\n$" + p + "\n" + l + "\n";
-                        catalogue.add(info);
-                        ListAdapter adapter = new ArrayAdapter<>(JobListActivity.this, android.R.layout.simple_list_item_1, catalogue);
-                        listView.setAdapter(adapter);
-                        text.setText("");
-                        popupWindow.dismiss();
+                        if(title.length()==0||des.length()==0||pay.length()==0||location.length()==0){
+                            Toast.makeText(JobListActivity.this, "Please fill in all information.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            t = title.getText().toString();
+                            d = des.getText().toString();
+                            p = pay.getText().toString();
+                            l = location.getText().toString();
+                            // Do something with the information
+                            String newP = "$" + p;
+                            showListView(t, d, newP, l);
+                            popupWindow.dismiss();
+                        }
                     }
                 });
             }
         });
+    }
+
+    // Function to show the images on the listView by finding them in the database
+    public void showListView(String t, String d, String p, String l){
+        //ArrayList<DataModel> catalogue = new ArrayList<>();
+        listView = findViewById(R.id.jobListView);
+        text = findViewById(R.id.jobListStatus);
+        // While there is data to read, add it to the listView
+        //while(data.moveToNext()){
+            catalogue.add(new DataModel(t,d,p,l));
+        //}
+        // Instantiate custom adapter
+        text.setText("");
+        adapter = new MyCustomAdapter(catalogue, this);
+        listView.setAdapter(adapter);
     }
 }
