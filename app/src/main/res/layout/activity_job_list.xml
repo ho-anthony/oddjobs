@@ -24,6 +24,15 @@
             android:gravity="center"
             android:text="@string/jobList_header"/>
 
+        <TextView
+            android:id="@+id/jobListStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/no_jobs" />
+
         <ListView
             android:id="@+id/jobListView"
             android:layout_width="match_parent"
