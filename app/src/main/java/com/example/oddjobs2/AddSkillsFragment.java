@@ -1,6 +1,8 @@
 package com.example.oddjobs2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -109,18 +111,23 @@ public class AddSkillsFragment extends Fragment {
     }
 
 
+    @SuppressLint("ResourceAsColor")
     public void updateSkillSet(String query){
         TextView skill_text = new TextView(mContext);
         Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
         skill_text.setText(query);
+        skill_text.setTextColor(Color.WHITE);
         if(skillSetSet.size()%2==0){
             //Alternate colors.
-            skill_text.setBackgroundResource(R.color.tealButton);
+            skill_text.setBackgroundResource(R.drawable.teal_button_bg);
         }
         else{
-            skill_text.setBackgroundResource(R.color.yellowButton);
+            skill_text.setBackgroundResource(R.drawable.yellow_button_bg);
         }
-        skill_text.setPadding(10,5,5,10);
+        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(10, 5, 10, 5);
+        skill_text.setLayoutParams(params);
+        skill_text.setPadding(30,30,30,30);
         skillSet.addView(skill_text);
     }
 

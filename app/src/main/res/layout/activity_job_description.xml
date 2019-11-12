@@ -2,6 +2,7 @@
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/backgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".JobDescriptionActivity">
@@ -12,65 +13,64 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/TitleTeal"
             android:id="@+id/job_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:text="@string/jobDescription_header"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:text="@string/jobDescription_header" />
 
         <TextView
+            style="@style/RegTextGray"
             android:id="@+id/jobName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/job_name"
-            android:textSize="24sp" />
+            android:text="@string/job_name" />
 
         <TextView
+            style="@style/RegTextGray"
             android:id="@+id/posterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/jobPoster_name"
-            android:textSize="24sp" />
+            android:text="@string/jobPoster_name"/>
 
         <TextView
+            style="@style/RegTextGray"
             android:id="@+id/jobDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/job_description"
-            android:textSize="24sp" />
+            android:text="@string/job_description" />
 
         <TextView
+            style="@style/RegTextGray"
             android:id="@+id/jobAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/amount_offered"
-            android:textSize="24sp" />
+            android:text="@string/amount_offered"/>
 
         <TextView
+            style="@style/RegTextGray"
             android:id="@+id/skillsNeeded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/skills_needed"
-            android:textSize="24sp" />
+            android:text="@string/skills_needed" />
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/skill_set_frag"

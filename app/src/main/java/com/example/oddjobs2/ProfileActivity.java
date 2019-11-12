@@ -29,7 +29,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         age = (EditText) findViewById(R.id.age);
         location = (EditText) findViewById(R.id.location);
         phone = (EditText) findViewById(R.id.phone_number);
-        keyWords = (EditText) findViewById(R.id.key_words);
         profilePicture.setOnClickListener(this);
     }
 
@@ -67,8 +66,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 lastName.toString().trim().equals("") ||
                 age.toString().trim().equals("") ||
                 location.toString().trim().equals("") ||
-                phone.toString().trim().equals("") ||
-                keyWords.toString().trim().equals("")) {
+                phone.toString().trim().equals("")
+//                keyWords.toString().trim().equals("")]
+                ){
             return false;
         }
         return true;

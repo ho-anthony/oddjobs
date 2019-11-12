@@ -2,6 +2,7 @@
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/backgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -14,15 +15,14 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/TitleTeal"
             android:id="@+id/jobListHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:text="@string/jobList_header"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:text="@string/jobList_header"/>
 
         <TextView
             android:id="@+id/jobListStatus"

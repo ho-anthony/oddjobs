@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/backgroundColor"
+    android:layout_height="match_parent">
+<android.widget.LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/backgroundColor"
+
     tools:context=".ProfileActivity">
 
     <LinearLayout
+
         android:id="@+id/profileLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +21,7 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/TitleYellow"
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,10 +29,10 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="@string/profile_header"
-            android:textSize="30sp"
             android:textStyle="bold" />
 
         <ImageView
+            style="@style/RoundProfile"
             android:id="@+id/profilePicture"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -38,6 +41,7 @@
             app:srcCompat="@drawable/ic_launcher_background" />
 
         <EditText
+            style="@style/RegTextBlack"
             android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,6 +54,7 @@
             android:inputType="textPersonName" />
 
         <EditText
+            style="@style/RegTextBlack"
             android:id="@+id/lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +67,7 @@
             android:inputType="textPersonName" />
 
         <EditText
+            style="@style/RegTextBlack"
             android:id="@+id/age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,6 +80,7 @@
             android:inputType="number" />
 
         <EditText
+            style="@style/RegTextBlack"
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,6 +93,7 @@
             android:inputType="textPersonName" />
 
         <EditText
+            style="@style/RegTextBlack"
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,20 +105,14 @@
             android:hint="@string/phone_number"
             android:inputType="phone" />
 
-        <EditText
-            android:id="@+id/key_words"
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.example.oddjobs2.AddSkillsFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="@string/key_words"
-            android:inputType="textMultiLine" />
+            android:layout_height="wrap_content" />
 
         <Button
+            style="@style/ButtonYellow"
             android:id="@+id/profileSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

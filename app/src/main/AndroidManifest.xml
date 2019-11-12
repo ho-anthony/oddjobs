@@ -20,11 +20,8 @@
             android:label="@string/title_activity_settings"></activity>
         <activity android:name=".ViewProfile" />
         <activity android:name=".JobDescriptionActivity" />
-        <activity android:name=".JobListActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity
-            android:name=".JobPostActivity"
-            android:exported="true" />
+        <activity android:name=".JobListActivity" android:exported="true"/>
+        <activity android:name=".ProfileActivity" android:exported="true"/>
         <activity
             android:name=".SwipeActivity"
             android:exported="true" />

@@ -7,7 +7,7 @@
         android:bottomLeftRadius="30dp" />
     <stroke
         android:width="3dp"
-        android:color="@color/yellowButton" />
+        android:color="@color/backgroundColor" />
     <solid
-        android:color="@color/yellowButton"/>
+        android:color="@color/backgroundColor"/>
 </shape>

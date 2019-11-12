@@ -26,20 +26,20 @@
             app:srcCompat="@drawable/logo" />
 
         <Button
+            style="@style/ButtonTeal"
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dip"
-            android:background="@color/tealButton"
             android:onClick="loginClicked"
             android:text="@string/login_button" />
 
         <Button
+            style="@style/ButtonYellow"
             android:id="@+id/signUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dip"
-            android:background="@color/yellowButton"
             android:onClick="signUpClicked"
             android:text="@string/sign_up_button" />
 
