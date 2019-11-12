@@ -2,8 +2,13 @@ package com.example.oddjobs2;
 
 import java.util.*;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,19 +26,32 @@ public class SwipeActivity extends AppCompatActivity {
 
     private LinearLayout base;
     private FlexboxLayout skillSet;
+    private ImageView profilePic;
+    private Context mContext;
 
     // Source: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
     private float x1,x2;
     static final int MIN_DISTANCE = 150;
     // Source end
 
+    //Constant hardcoded stuff for now ----------
+    private ArrayList<String> userData;
+    private ArrayList<String> jobData;
+    private ArrayList<String> userSkills;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
+        mContext = SwipeActivity.this;
 
         base = findViewById(R.id.linear_layout_swipe);
         skillSet = findViewById(R.id.skill_set_swipe);
+
+        userData = new ArrayList<String>();
+        jobData = new ArrayList<String>();
+        userSkills = new ArrayList<String>();
+
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
@@ -46,6 +64,10 @@ public class SwipeActivity extends AppCompatActivity {
             else{
                 //throw some exception
             }
+        }
+        else{
+            //By default pull user data for now. For testing
+            pullUserData();
         }
     }
 
@@ -78,75 +100,88 @@ public class SwipeActivity extends AppCompatActivity {
 
 
     public void pullUserData() {
-        String name = "Bob Smith";
-        String age = "35";
-        String bio = "Hello I am Bob Smith, looking for work!";
-        List<String> skills = new ArrayList<String>();
-        skills.add("fishing");
-        skills.add("drawing");
-        skills.add("surfing");
 
-        TextView userName = new TextView(getApplicationContext());
-        userName.setText("Name: " + name);
-        TextView userAge = new TextView(getApplicationContext());
-        userAge.setText("Age: " + age);
-        TextView userBio = new TextView(getApplicationContext());
-        userBio.setText("Bio: " + bio);
 
-        displaySkills(skills);
 
-        base.addView(userName);
-        base.addView(userAge);
-        base.addView(userBio);
+        //HARDCODED DATA FOR NOW------------------------
+        userData.add("John Smith");
+        userData.add("Age: 37");
+        userData.add("Location: 30 miles from you");
+        userData.add("Bio: I love cats!");
+
+        userSkills.add("fishing");
+        userSkills.add("drawing");
+        userSkills.add("Some kind of long, complex skill");
+        userSkills.add("CARPENTRY");
+        userSkills.add("Benchpressing");
+
+        generateLayout(userData);
+        displaySkills(userSkills);
 
     }
 
     public void pullJobData(){
-        String title = "Toilet plumber";
-        String price = "$100";
-        String bio = "Looking for toilet plumber!";
-        List<String> skills = new ArrayList<String>();
-        skills.add("fishing");
-        skills.add("drawing");
-        skills.add("surfing");
+        //Pull all data from database and convert displayed text to string format.
+        //HARDCODED DATA FOR NOW------------------------
+        userSkills.add("fishing");
+        userSkills.add("drawing");
+        userSkills.add("Some kind of long, complex skill");
+        userSkills.add("CARPENTRY");
+        userSkills.add("Benchpressing");
 
-        TextView jobTitle = new TextView(getApplicationContext());
-        jobTitle.setText("Title: " + title);
-        TextView jobPrice = new TextView(getApplicationContext());
-        jobPrice.setText("Price: " + price);
-        TextView jobBio = new TextView(getApplicationContext());
-        jobBio.setText("Bio: " + bio);
+        jobData.add("Pancake Maker");
+        jobData.add("Location: 0.5 miles from you");
+        jobData.add("Description: Looking for a good chef.");
+        generateLayout(jobData);
+        displaySkills(userSkills);
+    }
 
-        displaySkills(skills);
+    public void generateLayout(ArrayList<String> data){
+        for(int i=0; i<data.size(); i++){
+            TextView text = new TextView(getApplicationContext());
+            text.setText(data.get(i));
 
-        base.addView(jobTitle);
-        base.addView(jobPrice);
-        base.addView(jobBio);
+            text.setTextColor(Color.GRAY);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 20, 0, 20);
+            params.gravity = Gravity.CENTER_HORIZONTAL;
+
+            //https://stackoverflow.com/questions/14343903/what-is-the-equivalent-of-androidfontfamily-sans-serif-light-in-java-code
+            text.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+            //change this to sp later on.
+            text.setTextSize(20);
+
+            text.setLayoutParams(params);
+
+            base.addView(text);
+        }
+
     }
 
     public void displaySkills(List<String> skills){
-
-        int counter = 0;
-        for(String skill : skills){
-            TextView skill_text = new TextView(getApplicationContext());
-
-            skill_text.setText(skill);
-            if(counter%2==0){
+        for(int i=0; i<skills.size(); i++){
+            TextView skill_text = new TextView(mContext);
+            skill_text.setText(skills.get(i));
+            skill_text.setTextColor(Color.WHITE);
+            if(i%2==0){
                 //Alternate colors.
-                skill_text.setBackgroundResource(R.color.tealButton);
+                skill_text.setBackgroundResource(R.drawable.teal_button_bg);
             }
             else{
-                skill_text.setBackgroundResource(R.color.yellowButton);
+                skill_text.setBackgroundResource(R.drawable.yellow_button_bg);
             }
-            skill_text.setPadding(10,5,5,10);
+            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 5, 10, 5);
+            skill_text.setLayoutParams(params);
+            skill_text.setPadding(30,30,30,30);
             skillSet.addView(skill_text);
-            counter++;
         }
+
     }
 
     // Source used: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
     @Override
-    public boolean onTouchEvent(MotionEvent event)
+    public boolean dispatchTouchEvent(MotionEvent event)
     {
         switch(event.getAction())
         {
@@ -161,13 +196,13 @@ public class SwipeActivity extends AppCompatActivity {
                     // Left to Right swipe action
                     if (x2 > x1)
                     {
-                        Toast.makeText(this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
+                        Toast.makeText(SwipeActivity.this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
                     }
 
                     // Right to left swipe action
                     else
                     {
-                        Toast.makeText(this, "Right to Left swipe [Previous]", Toast.LENGTH_SHORT).show ();
+                        Toast.makeText(SwipeActivity.this, "Right to Left swipe [Previous]", Toast.LENGTH_SHORT).show ();
                     }
                 }
                 else
@@ -176,7 +211,7 @@ public class SwipeActivity extends AppCompatActivity {
                 }
                 break;
         }
-        return super.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
     // Source end
 

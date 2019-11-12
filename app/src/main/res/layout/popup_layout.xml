@@ -2,53 +2,71 @@
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#ff8c00">
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/popup_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Title"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/popup_des"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Description"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/popup_pay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Pay"/>
+            <EditText
+                android:id="@+id/popup_title"
+                style="@style/RegTextGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:hint="Job Title" />
 
-    <EditText
-        android:id="@+id/popup_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Job Location"/>
+            <EditText
+                android:id="@+id/popup_des"
+                style="@style/RegTextGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:hint="Job Description" />
 
-    <Button
-        android:id="@+id/popup_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="22sp"
-        android:hint="Post Job"/>
+            <EditText
+                android:id="@+id/popup_pay"
+                style="@style/RegTextGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:hint="Job Pay" />
+
+            <EditText
+                android:id="@+id/popup_location"
+                style="@style/RegTextGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:hint="Job Location" />
+
+            <fragment
+                android:id="@+id/fragment3"
+                android:name="com.example.oddjobs2.AddSkillsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/popup_post"
+                style="@style/ButtonTeal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:hint="Post Job" />
+        </LinearLayout>
+    </ScrollView>
+
 
 </android.widget.LinearLayout>

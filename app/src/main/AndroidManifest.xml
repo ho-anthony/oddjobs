@@ -14,11 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".JobDescriptionActivity" />
-        <activity android:name=".JobListActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity
-            android:name=".JobPostActivity"
-            android:exported="true" />
+        <activity android:name=".JobListActivity" android:exported="true"/>
+        <activity android:name=".ProfileActivity" android:exported="true"/>
         <activity
             android:name=".SwipeActivity"
             android:exported="true" />
