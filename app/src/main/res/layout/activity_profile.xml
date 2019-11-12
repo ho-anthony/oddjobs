@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/backgroundColor"
     android:layout_height="match_parent">
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,10 +9,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/backgroundColor"
+
     tools:context=".ProfileActivity">
 
     <LinearLayout
+
         android:id="@+id/profileLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +21,7 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/TitleYellow"
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,18 +29,17 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="@string/profile_header"
-            android:textSize="30sp"
             android:textStyle="bold" />
 
         <ImageView
+            style="@style/RoundProfile"
             android:id="@+id/profilePicture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             app:srcCompat="@drawable/ic_launcher_background" />
 
         <EditText
+            style="@style/RegTextGray"
             android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,6 +52,7 @@
             android:inputType="textPersonName" />
 
         <EditText
+            style="@style/RegTextGray"
             android:id="@+id/lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +65,7 @@
             android:inputType="textPersonName" />
 
         <EditText
+            style="@style/RegTextGray"
             android:id="@+id/age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,6 +78,7 @@
             android:inputType="number" />
 
         <EditText
+            style="@style/RegTextGray"
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,6 +91,7 @@
             android:inputType="textPersonName" />
 
         <EditText
+            style="@style/RegTextGray"
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,6 +117,7 @@
             android:inputType="textMultiLine" />
 
         <Button
+            style="@style/ButtonYellow"
             android:id="@+id/profileSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
