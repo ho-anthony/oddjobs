@@ -52,7 +52,7 @@
             android:hint="@string/job_loc"/>
 
         <fragment
-            android:id="@+id/fragment3"
+            android:id="@+id/add_skills_frag_popup"
             android:name="com.example.oddjobs2.AddSkillsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

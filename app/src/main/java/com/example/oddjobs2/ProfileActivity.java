@@ -12,12 +12,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int UPLOAD_RESULT = 1;
     EditText firstName, lastName, age, location, phone, keyWords;
     Button submit;
     ImageView profilePicture;
     Boolean picUploaded = false;
+    Set<String> mySkills;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         location = (EditText) findViewById(R.id.location);
         phone = (EditText) findViewById(R.id.phone_number);
         profilePicture.setOnClickListener(this);
+        mySkills = new HashSet<String>();
     }
 
     @Override
@@ -57,6 +62,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         } else {
             Toast.makeText(this,"Please upload a picture and fill in all of your information",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, mySkills.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

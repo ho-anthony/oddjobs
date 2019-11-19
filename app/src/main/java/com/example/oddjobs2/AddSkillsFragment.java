@@ -1,6 +1,7 @@
 package com.example.oddjobs2;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ public class AddSkillsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
 
         View view = inflater.inflate(R.layout.fragment_add_skills, container, false);
 
@@ -113,7 +116,7 @@ public class AddSkillsFragment extends Fragment {
 
     @SuppressLint("ResourceAsColor")
     public void updateSkillSet(String query){
-        TextView skill_text = new TextView(mContext);
+        final TextView skill_text = new TextView(mContext);
         Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
         skill_text.setText(query);
         skill_text.setTextColor(Color.WHITE);
@@ -128,7 +131,26 @@ public class AddSkillsFragment extends Fragment {
         params.setMargins(10, 5, 10, 5);
         skill_text.setLayoutParams(params);
         skill_text.setPadding(30,30,30,30);
+
+        skill_text.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(mContext instanceof ProfileActivity){
+                    ProfileActivity activity = (ProfileActivity) mContext;
+                    activity.mySkills.remove(skill_text.getText().toString());
+                    skillSetSet.remove(skill_text.getText().toString());
+                    skill_text.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         skillSet.addView(skill_text);
+        if(mContext instanceof ProfileActivity){
+            ProfileActivity activity = (ProfileActivity) mContext;
+            activity.mySkills.add(skill_text.getText().toString());
+        }
+
     }
 
 

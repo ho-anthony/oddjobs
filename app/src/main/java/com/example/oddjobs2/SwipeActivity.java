@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Scene;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -14,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -69,6 +73,12 @@ public class SwipeActivity extends AppCompatActivity {
             //By default pull user data for now. For testing
             pullUserData();
         }
+        // https://developer.android.com/training/transitions
+
+
+
+
+
     }
 
     // https://developer.android.com/guide/topics/ui/menus
@@ -196,14 +206,25 @@ public class SwipeActivity extends AppCompatActivity {
                     // Left to Right swipe action
                     if (x2 > x1)
                     {
+                        // https://stackoverflow.com/questions/3053761/reload-activity-in-android
+                        finish();
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        startActivity(getIntent());
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         Toast.makeText(SwipeActivity.this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
                     }
 
                     // Right to left swipe action
                     else
                     {
+                        // https://stackoverflow.com/questions/3053761/reload-activity-in-android
+                        finish();
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        startActivity(getIntent());
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         Toast.makeText(SwipeActivity.this, "Right to Left swipe [Previous]", Toast.LENGTH_SHORT).show ();
                     }
+
                 }
                 else
                 {
