@@ -43,5 +43,16 @@
             android:onClick="signUpClicked"
             android:text="@string/sign_up_button" />
 
+        <ProgressBar
+            android:id="@+id/firebaseProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
     </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
