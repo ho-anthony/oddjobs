@@ -44,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signUpButton);
         firebaseProgress = findViewById(R.id.firebaseProgress);
+
+        DH dh = new DH();
+        dh.test();
     }
 
     public void loginClicked(View v) {
