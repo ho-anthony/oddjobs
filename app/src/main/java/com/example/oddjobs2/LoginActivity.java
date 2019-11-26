@@ -46,7 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         firebaseProgress = findViewById(R.id.firebaseProgress);
 
         DH dh = new DH();
-        dh.test();
+        String bobby = dh.newUser("Bob", "Marley");
+        dh.newJob("sample title", bobby);
     }
 
     public void loginClicked(View v) {
