@@ -46,7 +46,7 @@ public class JobListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
 
-        fab = findViewById(R.id.floatingActionButton);
+        /*fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +92,7 @@ public class JobListActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
     }
 
     // Function to show the images on the listView by finding them in the database

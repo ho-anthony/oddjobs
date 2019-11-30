@@ -12,11 +12,15 @@ import android.transition.Scene;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -24,7 +28,12 @@ import android.widget.Toast;
 import android.view.View;
 import android.view.MotionEvent;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class SwipeActivity extends AppCompatActivity {
 
@@ -32,6 +41,8 @@ public class SwipeActivity extends AppCompatActivity {
     private FlexboxLayout skillSet;
     private ImageView profilePic;
     private Context mContext;
+    Button post;
+    EditText title, des, pay, location;
 
     // Source: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
     private float x1,x2;
@@ -61,6 +72,7 @@ public class SwipeActivity extends AppCompatActivity {
         if(extras != null){
             if(extras.getString("userChoice").equals("workRequest")){
                 pullUserData();
+                showPopup();
             }
             else if(extras.getString("userChoice").equals("workSearch")){
                 pullJobData();
@@ -102,6 +114,9 @@ public class SwipeActivity extends AppCompatActivity {
             case R.id.menu_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
+            case R.id.menu_sign_out:
+                startActivity(new Intent(this, LoginActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -127,7 +142,6 @@ public class SwipeActivity extends AppCompatActivity {
 
         generateLayout(userData);
         displaySkills(userSkills);
-
     }
 
     public void pullJobData(){
@@ -235,6 +249,51 @@ public class SwipeActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
     // Source end
+
+    public void showPopup(){
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_layout, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        findViewById(R.id.background).post(new Runnable() {
+            public void run() {
+                // show the popup window
+                popupWindow.showAtLocation(findViewById(R.id.background), Gravity.CENTER, 0, 0);
+            }
+        });
+
+        post = popupView.findViewById(R.id.popup_post);
+        title = popupView.findViewById(R.id.popup_title);
+        des = popupView.findViewById(R.id.popup_des);
+        pay = popupView.findViewById(R.id.popup_pay);
+        location = popupView.findViewById(R.id.popup_location);
+
+        // Store information and close popup window
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String t, d, p, l;
+                if(title.length()==0||des.length()==0||pay.length()==0||location.length()==0){
+                    Toast.makeText(SwipeActivity.this, "Please fill in all information.", Toast.LENGTH_SHORT).show();
+                } else {
+                    t = title.getText().toString();
+                    d = des.getText().toString();
+                    p = pay.getText().toString();
+                    l = location.getText().toString();
+                    // Do something with the information
+                    String newP = "$" + p;
+                    popupWindow.dismiss();
+                }
+            }
+        });
+    }
 
 
 }

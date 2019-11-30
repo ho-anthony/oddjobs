@@ -65,7 +65,7 @@ public class MyCustomAdapter extends ArrayAdapter<DataModel> implements ListAdap
             result=convertView;
         }
 
-        // If the user clicks the delete button,
+        /* If the user clicks the delete button,
         // the item is removed from the list and the database
         final int newPosition = position;
         Button deleteBtn = (Button)convertView.findViewById(R.id.delete_btn);
@@ -76,7 +76,7 @@ public class MyCustomAdapter extends ArrayAdapter<DataModel> implements ListAdap
                 notifyDataSetChanged();
                 JobListActivity.checkEmpty();
             }
-        });
+        });*/
 
         // Add the ID to the listView holder
         viewHolder.txtName.setText(dataModel.getName());
