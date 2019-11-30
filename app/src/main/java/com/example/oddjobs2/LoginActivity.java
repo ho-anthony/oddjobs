@@ -27,6 +27,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity {
     LinearLayout layout;
     Button loginButton;
@@ -45,8 +47,28 @@ public class LoginActivity extends AppCompatActivity {
         signUpButton = findViewById(R.id.signUpButton);
         firebaseProgress = findViewById(R.id.firebaseProgress);
 
+        // SAMPLE DATABASE HELPER TEST
         DH dh = new DH();
-        dh.test();
+        ArrayList<String> mySkills = new ArrayList<String>();
+        mySkills.add("carpentry");
+        mySkills.add("guitar");
+        mySkills.add("competitive eating");
+        dh.newUser(
+                "rando",
+                "Bob",
+                "Marley",
+                "myBio",
+                0,
+                0,
+                mySkills
+                );
+        dh.newJob(
+                "rando",
+                "baker",
+                20,
+                "buns",
+                mySkills
+        );
     }
 
     public void loginClicked(View v) {
