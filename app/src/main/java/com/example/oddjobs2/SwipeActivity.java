@@ -29,6 +29,12 @@ import android.view.View;
 import android.view.MotionEvent;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -43,6 +49,11 @@ public class SwipeActivity extends AppCompatActivity {
     private Context mContext;
     Button post;
     EditText title, des, pay, location;
+    DH dh = new DH();
+    Set<String> mySkills;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mUsers;
+    private DatabaseReference mJobs;
 
     // Source: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
     private float x1,x2;
@@ -59,6 +70,7 @@ public class SwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         mContext = SwipeActivity.this;
+        mySkills = new HashSet<String>();
 
         base = findViewById(R.id.linear_layout_swipe);
         skillSet = findViewById(R.id.skill_set_swipe);
@@ -72,7 +84,8 @@ public class SwipeActivity extends AppCompatActivity {
         if(extras != null){
             if(extras.getString("userChoice").equals("workRequest")){
                 pullUserData();
-                showPopup();
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                checkActiveJob(uid);
             }
             else if(extras.getString("userChoice").equals("workSearch")){
                 pullJobData();
@@ -86,9 +99,6 @@ public class SwipeActivity extends AppCompatActivity {
             pullUserData();
         }
         // https://developer.android.com/training/transitions
-
-
-
 
 
     }
@@ -286,14 +296,52 @@ public class SwipeActivity extends AppCompatActivity {
                     t = title.getText().toString();
                     d = des.getText().toString();
                     p = pay.getText().toString();
+                    float newP = Float.parseFloat(p);
                     l = location.getText().toString();
                     // Do something with the information
-                    String newP = "$" + p;
+                    //String newP = "$" + p;
+                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    ArrayList<String> skills = new ArrayList<String>();
+                    dh.newJob(uid,t,d,newP,l,skills);
                     popupWindow.dismiss();
                 }
             }
         });
     }
 
+    public void checkActiveJob (String uid){
+        mDatabase = FirebaseDatabase.getInstance();
+        mUsers = mDatabase.getReference("Users");
+        mJobs = mDatabase.getReference("Jobs");
+        DatabaseReference job = mUsers.child(uid).child("userCurrentJob");
+        job.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jobID = dataSnapshot.getValue(String.class);
+                Log.i("myTag", "onDataChange:" + jobID);
+                DatabaseReference active = mJobs.child(jobID).child("active");
+                active.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot1) {
+                        Boolean end = dataSnapshot1.getValue(Boolean.class);
+                        if(!end){
+                            showPopup();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
 
 }

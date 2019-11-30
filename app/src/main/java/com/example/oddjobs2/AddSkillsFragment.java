@@ -140,6 +140,11 @@ public class AddSkillsFragment extends Fragment {
                     activity.mySkills.remove(skill_text.getText().toString());
                     skillSetSet.remove(skill_text.getText().toString());
                     skill_text.setVisibility(View.GONE);
+                } else if(mContext instanceof SwipeActivity) {
+                    SwipeActivity activity = (SwipeActivity) mContext;
+                    activity.mySkills.remove(skill_text.getText().toString());
+                    skillSetSet.remove(skill_text.getText().toString());
+                    skill_text.setVisibility(View.GONE);
                 }
             }
         });
@@ -148,6 +153,9 @@ public class AddSkillsFragment extends Fragment {
         skillSet.addView(skill_text);
         if(mContext instanceof ProfileActivity){
             ProfileActivity activity = (ProfileActivity) mContext;
+            activity.mySkills.add(skill_text.getText().toString());
+        } else if(mContext instanceof SwipeActivity) {
+            SwipeActivity activity = (SwipeActivity) mContext;
             activity.mySkills.add(skill_text.getText().toString());
         }
 

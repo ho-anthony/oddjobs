@@ -23,6 +23,7 @@ public class ViewProfile extends AppCompatActivity {
     EditText eName, eLName, eAge, eLoc, eEmail, ePhone;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mActiveUsers;
+    DH dh = new DH();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

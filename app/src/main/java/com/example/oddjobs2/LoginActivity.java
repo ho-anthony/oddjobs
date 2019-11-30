@@ -65,8 +65,9 @@ public class LoginActivity extends AppCompatActivity {
         dh.newJob(
                 "rando",
                 "baker",
-                20,
                 "buns",
+                20,
+                "here",
                 mySkills
         );
     }

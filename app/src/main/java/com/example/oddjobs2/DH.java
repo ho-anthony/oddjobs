@@ -1,11 +1,21 @@
 package com.example.oddjobs2;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 //Database Helper Class
 public class DH {
@@ -84,8 +94,9 @@ public class DH {
      */
     public void newJob(String UID,
                        String title,
-                       float price,
                        String description,
+                       float price,
+                       String location,
                        ArrayList<String> skills
     ){
         String posterKey = UID;
@@ -94,6 +105,7 @@ public class DH {
         mJobs.child(jobKey).child("jobTitle").setValue(title);
         mJobs.child(jobKey).child("jobPrice").setValue(price);
         mJobs.child(jobKey).child("jobDescription").setValue(description);
+        mJobs.child(jobKey).child("jobLocation").setValue(location);
 
         mJobs.child(jobKey).child("jobSkills").child("NONE").setValue(false);
         for(String skill : skills){
@@ -109,6 +121,40 @@ public class DH {
 
         mActiveJobs.child(jobKey).setValue(false);
     }
+
+    private boolean end;
+        public boolean checkActiveJob (String uid){
+            end = false;
+            DatabaseReference job = mUsers.child(uid).child("userCurrentJob");
+            job.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String jobID = dataSnapshot.getValue(String.class);
+                    Log.i("myTag", "onDataChange:" + jobID);
+                    DatabaseReference active = mJobs.child(jobID).child("active");
+                    active.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot1) {
+                            end = dataSnapshot1.getValue(Boolean.class);
+                            Log.i("myTag", "onDataChange:" + end);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            throw databaseError.toException();
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    throw databaseError.toException();
+                }
+            });
+            Log.i("myTag", "onDataChange:" + end);
+            return end;
+        }
 
 
     public void acceptJob(){
