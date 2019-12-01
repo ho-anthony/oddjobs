@@ -20,6 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -30,10 +36,13 @@ public class JobListActivity extends AppCompatActivity {
     Button post;
     EditText title, des, pay, location;
     ListView listView;
-    static TextView text;
+    static TextView text, text2, text3, text6;
     //ArrayList<String> catalogue = new ArrayList<>();
     ArrayList<DataModel> catalogue = new ArrayList<>();
     static MyCustomAdapter adapter;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mUsers;
+    private DatabaseReference mJobs;
 
     public static void checkEmpty() {
         if(adapter.getCount() == 0){
@@ -45,6 +54,7 @@ public class JobListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
+        checkActiveJob();
 
         /*fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -102,11 +112,84 @@ public class JobListActivity extends AppCompatActivity {
         text = findViewById(R.id.jobListStatus);
         // While there is data to read, add it to the listView
         //while(data.moveToNext()){
-            catalogue.add(new DataModel(t,d,p,l));
+        Log.i("myTag", "showListView: "+t + d);
+        catalogue.add(new DataModel(t,d,p,l));
         //}
         // Instantiate custom adapter
         text.setText("");
         adapter = new MyCustomAdapter(catalogue, this);
         listView.setAdapter(adapter);
+    }
+
+
+    public void checkActiveJob (){
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance();
+        mUsers = mDatabase.getReference("Users");
+        mJobs = mDatabase.getReference("Jobs");
+        DatabaseReference job = mUsers.child(uid).child("userCurrentJob");
+        job.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jobID = dataSnapshot.getValue(String.class);
+                Log.i("myTag", "onDataChange:" + jobID);
+                DatabaseReference active = mJobs.child(jobID).child("active");
+                active.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot1) {
+                        Boolean end = dataSnapshot1.getValue(Boolean.class);
+                        if(end){
+                            getJobInfo();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
+
+    public void getJobInfo(){
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance();
+        mUsers = mDatabase.getReference("Users");
+        mJobs = mDatabase.getReference("Jobs");
+        DatabaseReference job = mUsers.child(uid).child("userCurrentJob");
+        job.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jobID = dataSnapshot.getValue(String.class);
+                Log.i("myTag", "onDataChange:" + jobID);
+                DatabaseReference active = mJobs.child(jobID).child("jobTitle");
+                active.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot1) {
+                        String end = dataSnapshot1.getValue(String.class);
+                        Log.i("myTag", "onDataChange:"+end);
+                        showListView(end, "No Match", end, end);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 }
