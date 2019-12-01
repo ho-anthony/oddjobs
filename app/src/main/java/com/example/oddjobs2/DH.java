@@ -63,19 +63,17 @@ public class DH {
             String UID,
             String firstName,
             String lastName,
-            String bio,
-            float latitude,
-            float longitude,
+            String location,
+            String phone,
             ArrayList<String> skills
     ){
         String userKey = UID;
         mUsers.child(userKey).child("firstName").setValue(firstName);
         mUsers.child(userKey).child("lastName").setValue(lastName);
-        mUsers.child(userKey).child("userBio").setValue(bio);
+        mUsers.child(userKey).child("location").setValue(location);
         // Default item in skills/ jobs set is "N/A" mapped to false
 
-        mUsers.child(userKey).child("latitude").setValue(latitude);
-        mUsers.child(userKey).child("longitude").setValue(longitude);
+        mUsers.child(userKey).child("phone").setValue(phone);
 
         mUsers.child(userKey).child("userSkills").child("NONE").setValue(false);
         for(String skill : skills){
