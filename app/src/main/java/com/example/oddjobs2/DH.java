@@ -63,6 +63,7 @@ public class DH {
             String UID,
             String firstName,
             String lastName,
+            String age,
             String location,
             String phone,
             ArrayList<String> skills
@@ -70,6 +71,7 @@ public class DH {
         String userKey = UID;
         mUsers.child(userKey).child("firstName").setValue(firstName);
         mUsers.child(userKey).child("lastName").setValue(lastName);
+        mUsers.child(userKey).child("age").setValue(age);
         mUsers.child(userKey).child("location").setValue(location);
         // Default item in skills/ jobs set is "N/A" mapped to false
 
@@ -82,7 +84,7 @@ public class DH {
         }
 
         mUsers.child(userKey).child("userOldJobs").child("NONE").setValue(false);
-        mUsers.child(userKey).child("userCurrentJob").setValue(false);
+        mUsers.child(userKey).child("userCurrentJob").setValue("NONE");
 
     }
 

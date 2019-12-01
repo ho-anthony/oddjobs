@@ -21,9 +21,14 @@ public class ViewProfile extends AppCompatActivity {
     TextView fname, lname, age, location, email, phone;
     Button edit, save;
     EditText eName, eLName, eAge, eLoc, eEmail, ePhone;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mActiveUsers;
     DH dh = new DH();
+    Boolean editMode = false;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String userid = user.getUid();
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();;
+    private DatabaseReference mActiveUsers = mDatabase.getReference("Users");
+    //mDatabase = FirebaseDatabase.getInstance();
+    //mActiveUsers = mDatabase.getReference("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,30 +51,11 @@ public class ViewProfile extends AppCompatActivity {
         eEmail = findViewById(R.id.editEmail);
         ePhone = findViewById(R.id.editPhone);
 
-        //String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //fname.setText(uid);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userid = user.getUid();
-        mDatabase = FirebaseDatabase.getInstance();
-        mActiveUsers = mDatabase.getReference("ActiveUsers");
-        mActiveUsers.child(userid).setValue(user);
-        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("email").getValue(String.class);
-                fname.setText(name);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-
+        getData(userid);
     }
 
     public void editProfile(View view) {
+        editMode = true;
         fname.setVisibility(view.GONE);
         lname.setVisibility(view.GONE);
         age.setVisibility(view.GONE);
@@ -86,9 +72,15 @@ public class ViewProfile extends AppCompatActivity {
         eEmail.setVisibility(view.VISIBLE);
         ePhone.setVisibility(view.VISIBLE);
 
+        editData(userid);
+
     }
 
     public void saveProfile(View view) {
+        if(editMode){
+            saveData(userid);
+        }
+        editMode = false;
         fname.setVisibility(view.VISIBLE);
         lname.setVisibility(view.VISIBLE);
         age.setVisibility(view.VISIBLE);
@@ -104,5 +96,112 @@ public class ViewProfile extends AppCompatActivity {
         eLoc.setVisibility(view.GONE);
         eEmail.setVisibility(view.GONE);
         ePhone.setVisibility(view.GONE);
+
+        getData(userid);
+    }
+
+    public void getData(String userid){
+        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("firstName").getValue(String.class);
+                fname.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("lastName").getValue(String.class);
+                lname.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("age").getValue(String.class);
+                age.setText(String.valueOf(name));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("location").getValue(String.class);
+                location.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                email.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+        mActiveUsers.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("phone").getValue(String.class);
+                phone.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
+
+    public void editData(String userid){
+        String n = fname.getText().toString();
+        String ln = lname.getText().toString();
+        String a = age.getText().toString();
+        String l = location.getText().toString();
+        String e = email.getText().toString();
+        String p = phone.getText().toString();
+        eName.setText(n);
+        eLName.setText(ln);
+        eAge.setText(a);
+        eLoc.setText(l);
+        eEmail.setText(e);
+        ePhone.setText(p);
+
+    }
+
+    public void saveData(String userid){
+        mActiveUsers.child(userid).child("firstName").setValue(eName.getText().toString());
+        mActiveUsers.child(userid).child("lastName").setValue(eLName.getText().toString());
+        mActiveUsers.child(userid).child("age").setValue(eAge.getText().toString());
+        mActiveUsers.child(userid).child("location").setValue(eLoc.getText().toString());
+        mActiveUsers.child(userid).child("phone").setValue(ePhone.getText().toString());
     }
 }

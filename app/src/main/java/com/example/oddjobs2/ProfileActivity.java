@@ -71,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     userID,
                     firstName.getText().toString().trim(),
                     lastName.getText().toString().trim(),
+                    age.getText().toString().trim(),
                     location.getText().toString().trim(),
                     phone.getText().toString().trim(),
                     mySkills

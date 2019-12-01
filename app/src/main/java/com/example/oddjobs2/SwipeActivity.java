@@ -319,6 +319,10 @@ public class SwipeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jobID = dataSnapshot.getValue(String.class);
+                if(jobID.equals("NONE")){
+                    showPopup();
+                    return;
+                }
                 Log.i("myTag", "onDataChange:" + jobID);
                 DatabaseReference active = mJobs.child(jobID).child("active");
                 active.addListenerForSingleValueEvent(new ValueEventListener() {
