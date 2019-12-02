@@ -40,6 +40,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 public class SwipeActivity extends AppCompatActivity {
 
@@ -50,10 +51,11 @@ public class SwipeActivity extends AppCompatActivity {
     Button post;
     EditText title, des, pay, location;
     DH dh = new DH();
-    Set<String> mySkills;
+    ArrayList<String> mySkills;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUsers;
     private DatabaseReference mJobs;
+    AddSkillsFragment addSkills = new AddSkillsFragment();
 
     // Source: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
     private float x1,x2;
@@ -70,7 +72,7 @@ public class SwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         mContext = SwipeActivity.this;
-        mySkills = new HashSet<String>();
+        mySkills = new ArrayList<>();
 
         base = findViewById(R.id.linear_layout_swipe);
         skillSet = findViewById(R.id.skill_set_swipe);
@@ -301,8 +303,10 @@ public class SwipeActivity extends AppCompatActivity {
                     // Do something with the information
                     //String newP = "$" + p;
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    ArrayList<String> skills = new ArrayList<String>();
-                    dh.newJob(uid,t,d,newP,l,skills);
+                    //ArrayList<String> skills;
+                    //skills = addSkills.getSkills();
+                    Log.i("myTag", "newJob: "+mySkills);
+                    dh.newJob(uid,t,d,newP,l,mySkills);
                     popupWindow.dismiss();
                 }
             }
