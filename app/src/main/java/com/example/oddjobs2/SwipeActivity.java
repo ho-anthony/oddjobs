@@ -28,6 +28,12 @@ import android.widget.Toast;
 import android.view.View;
 import android.view.MotionEvent;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -49,7 +55,7 @@ public class SwipeActivity extends AppCompatActivity {
     private ImageView profilePic;
     private Context mContext;
     Button post;
-    EditText title, des, pay, location;
+    EditText title, des, pay;
     DH dh = new DH();
     ArrayList<String> mySkills;
     private FirebaseDatabase mDatabase;
@@ -60,6 +66,9 @@ public class SwipeActivity extends AppCompatActivity {
     // Source: https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android
     private float x1,x2;
     static final int MIN_DISTANCE = 150;
+
+    String location = "";
+    double latitude, longitude;
     // Source end
 
     //Constant hardcoded stuff for now ----------
@@ -80,6 +89,11 @@ public class SwipeActivity extends AppCompatActivity {
         userData = new ArrayList<String>();
         jobData = new ArrayList<String>();
         userSkills = new ArrayList<String>();
+
+        // https://developers.google.com/places/android-sdk/start
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), "AIzaSyCj0-7H-hAXU1n8fuvTr9_tH6zK2SVZ7uM");
+        final PlacesClient placesClient = Places.createClient(this);
 
 
         Bundle extras = getIntent().getExtras();
@@ -269,8 +283,8 @@ public class SwipeActivity extends AppCompatActivity {
         View popupView = inflater.inflate(R.layout.popup_layout, null);
 
         // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
@@ -285,7 +299,32 @@ public class SwipeActivity extends AppCompatActivity {
         title = popupView.findViewById(R.id.popup_title);
         des = popupView.findViewById(R.id.popup_des);
         pay = popupView.findViewById(R.id.popup_pay);
-        location = popupView.findViewById(R.id.popup_location);
+
+
+
+
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_popup);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                location = place.getName();
+                latitude = place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
+                Log.i("fatDebug", "Place: " + place.getName() + ", " + place.getLatLng());
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i("fatDebug", "An error occurred: " + status);
+            }
+        });
 
         // Store information and close popup window
         post.setOnClickListener(new View.OnClickListener() {
@@ -299,14 +338,13 @@ public class SwipeActivity extends AppCompatActivity {
                     d = des.getText().toString();
                     p = pay.getText().toString();
                     float newP = Float.parseFloat(p);
-                    l = location.getText().toString();
                     // Do something with the information
                     //String newP = "$" + p;
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     //ArrayList<String> skills;
                     //skills = addSkills.getSkills();
                     Log.i("myTag", "newJob: "+mySkills);
-                    dh.newJob(uid,t,d,newP,l,mySkills);
+                    dh.newJob(uid,t,d,newP,location,latitude,longitude,mySkills);
                     popupWindow.dismiss();
                 }
             }
