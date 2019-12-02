@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +25,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ImageView profilePicture;
     Boolean picUploaded = false;
     Set<String> mySkills;
+    DH databaseHelper;
+    String userID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +40,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         phone = (EditText) findViewById(R.id.phone_number);
         profilePicture.setOnClickListener(this);
         mySkills = new HashSet<String>();
+        databaseHelper = new DH();
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @Override
@@ -58,6 +65,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
     public void submitProfile(View v){
         if(checkValidity()) {
+
+            ArrayList<String> mySkills = new ArrayList<String>();
+            databaseHelper.newUser(
+                    userID,
+                    firstName.getText().toString().trim(),
+                    lastName.getText().toString().trim(),
+                    age.getText().toString().trim(),
+                    location.getText().toString().trim(),
+                    phone.getText().toString().trim(),
+                    mySkills
+            );
             Intent intent = new Intent(this, DecisionActivity.class);
             startActivity(intent);
         } else {

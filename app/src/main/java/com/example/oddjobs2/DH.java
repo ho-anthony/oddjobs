@@ -1,11 +1,22 @@
 package com.example.oddjobs2;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Set;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 //Database Helper Class
 public class DH {
@@ -53,19 +64,19 @@ public class DH {
             String UID,
             String firstName,
             String lastName,
-            String bio,
-            float latitude,
-            float longitude,
+            String age,
+            String location,
+            String phone,
             ArrayList<String> skills
     ){
         String userKey = UID;
         mUsers.child(userKey).child("firstName").setValue(firstName);
         mUsers.child(userKey).child("lastName").setValue(lastName);
-        mUsers.child(userKey).child("userBio").setValue(bio);
+        mUsers.child(userKey).child("age").setValue(age);
+        mUsers.child(userKey).child("location").setValue(location);
         // Default item in skills/ jobs set is "N/A" mapped to false
 
-        mUsers.child(userKey).child("latitude").setValue(latitude);
-        mUsers.child(userKey).child("longitude").setValue(longitude);
+        mUsers.child(userKey).child("phone").setValue(phone);
 
         mUsers.child(userKey).child("userSkills").child("NONE").setValue(false);
         for(String skill : skills){
@@ -74,7 +85,7 @@ public class DH {
         }
 
         mUsers.child(userKey).child("userOldJobs").child("NONE").setValue(false);
-        mUsers.child(userKey).child("userCurrentJob").setValue(false);
+        mUsers.child(userKey).child("userCurrentJob").setValue("NONE");
 
     }
 
@@ -84,8 +95,9 @@ public class DH {
      */
     public void newJob(String UID,
                        String title,
-                       float price,
                        String description,
+                       float price,
+                       String location,
                        ArrayList<String> skills
     ){
         String posterKey = UID;
@@ -94,6 +106,7 @@ public class DH {
         mJobs.child(jobKey).child("jobTitle").setValue(title);
         mJobs.child(jobKey).child("jobPrice").setValue(price);
         mJobs.child(jobKey).child("jobDescription").setValue(description);
+        mJobs.child(jobKey).child("jobLocation").setValue(location);
 
         mJobs.child(jobKey).child("jobSkills").child("NONE").setValue(false);
         for(String skill : skills){
@@ -109,6 +122,40 @@ public class DH {
 
         mActiveJobs.child(jobKey).setValue(true);
     }
+
+    private boolean end;
+        public boolean checkActiveJob (String uid){
+            end = false;
+            DatabaseReference job = mUsers.child(uid).child("userCurrentJob");
+            job.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String jobID = dataSnapshot.getValue(String.class);
+                    Log.i("myTag", "onDataChange:" + jobID);
+                    DatabaseReference active = mJobs.child(jobID).child("active");
+                    active.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot1) {
+                            end = dataSnapshot1.getValue(Boolean.class);
+                            Log.i("myTag", "onDataChange:" + end);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            throw databaseError.toException();
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    throw databaseError.toException();
+                }
+            });
+            Log.i("myTag", "onDataChange:" + end);
+            return end;
+        }
 
 
     public void acceptJob(){

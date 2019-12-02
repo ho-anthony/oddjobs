@@ -1,19 +1,16 @@
 package com.example.oddjobs2;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MyCustomAdapter extends ArrayAdapter<DataModel> implements ListAdapter {
     private ArrayList<DataModel> dataSet;
@@ -51,10 +48,10 @@ public class MyCustomAdapter extends ArrayAdapter<DataModel> implements ListAdap
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.custom_list_view, parent, false);
-            viewHolder.txtName = (TextView) convertView.findViewById(R.id.list_item_name);
-            viewHolder.txtDes = (TextView) convertView.findViewById(R.id.list_item_des);
-            viewHolder.txtPay = (TextView) convertView.findViewById(R.id.list_item_pay);
-            viewHolder.txtLoc = (TextView) convertView.findViewById(R.id.list_item_loc);
+            viewHolder.txtName = (TextView) convertView.findViewById(R.id.listName);
+            viewHolder.txtDes = (TextView) convertView.findViewById(R.id.listStatus);
+            //viewHolder.txtPay = (TextView) convertView.findViewById(R.id.list_item_pay);
+            //viewHolder.txtLoc = (TextView) convertView.findViewById(R.id.list_item_loc);
 
             result=convertView;
 
@@ -65,7 +62,7 @@ public class MyCustomAdapter extends ArrayAdapter<DataModel> implements ListAdap
             result=convertView;
         }
 
-        // If the user clicks the delete button,
+        /* If the user clicks the delete button,
         // the item is removed from the list and the database
         final int newPosition = position;
         Button deleteBtn = (Button)convertView.findViewById(R.id.delete_btn);
@@ -76,13 +73,13 @@ public class MyCustomAdapter extends ArrayAdapter<DataModel> implements ListAdap
                 notifyDataSetChanged();
                 JobListActivity.checkEmpty();
             }
-        });
+        });*/
 
         // Add the ID to the listView holder
         viewHolder.txtName.setText(dataModel.getName());
         viewHolder.txtDes.setText(dataModel.getDes());
-        viewHolder.txtPay.setText(dataModel.getPay());
-        viewHolder.txtLoc.setText(dataModel.getLocation());
+        //viewHolder.txtPay.setText(dataModel.getPay());
+        //viewHolder.txtLoc.setText(dataModel.getLocation());
         // Return the completed view to render on screen
         return convertView;
     }

@@ -36,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     boolean signUp = false;
     boolean logIn = false;
     private FirebaseAuth mAuth;
+    DH databaseHelper;
+
     ProgressBar firebaseProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signUpButton);
         firebaseProgress = findViewById(R.id.firebaseProgress);
+        databaseHelper = new DH();
+    /*    // SAMPLE DATABASE HELPER TEST
 
-        // SAMPLE DATABASE HELPER TEST
-        DH dh = new DH();
         ArrayList<String> mySkills = new ArrayList<String>();
         mySkills.add("carpentry");
         mySkills.add("guitar");
@@ -65,10 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         dh.newJob(
                 "rando",
                 "baker",
-                20,
                 "buns",
+                20,
+                "here",
                 mySkills
-        );
+        );*/
     }
 
     public void loginClicked(View v) {

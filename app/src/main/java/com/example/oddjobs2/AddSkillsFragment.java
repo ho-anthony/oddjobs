@@ -37,6 +37,7 @@ public class AddSkillsFragment extends Fragment {
     private Context mContext;
     private Set<String> skillSetSet;
     private List<String> skillSuggestionsList;
+    ArrayList<String> skills = new ArrayList<String>();
 
     public AddSkillsFragment() {
         // Required empty public constructor
@@ -140,6 +141,11 @@ public class AddSkillsFragment extends Fragment {
                     activity.mySkills.remove(skill_text.getText().toString());
                     skillSetSet.remove(skill_text.getText().toString());
                     skill_text.setVisibility(View.GONE);
+                } else if(mContext instanceof SwipeActivity) {
+                    SwipeActivity activity = (SwipeActivity) mContext;
+                    activity.mySkills.remove(skill_text.getText().toString());
+                    skillSetSet.remove(skill_text.getText().toString());
+                    skill_text.setVisibility(View.GONE);
                 }
             }
         });
@@ -149,13 +155,20 @@ public class AddSkillsFragment extends Fragment {
         if(mContext instanceof ProfileActivity){
             ProfileActivity activity = (ProfileActivity) mContext;
             activity.mySkills.add(skill_text.getText().toString());
+        } else if(mContext instanceof SwipeActivity) {
+            SwipeActivity activity = (SwipeActivity) mContext;
+            activity.mySkills.add(skill_text.getText().toString());
+            skills.add(skill_text.getText().toString());
+            Log.i("myTage", "onClick: in Swipe"+skills);
         }
 
     }
 
 
-
-
+    public ArrayList<String> getSkills(){
+        Log.i("myTagsss", "onClick: in Swipe"+skills);
+        return skills;
+    }
 
     @Override
     public void onAttach(Context context) {
