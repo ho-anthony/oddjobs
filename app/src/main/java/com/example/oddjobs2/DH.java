@@ -66,6 +66,8 @@ public class DH {
             String lastName,
             String age,
             String location,
+            double latitude,
+            double longitude,
             String phone,
             ArrayList<String> skills
     ){
@@ -75,6 +77,8 @@ public class DH {
         mUsers.child(userKey).child("age").setValue(age);
         mUsers.child(userKey).child("location").setValue(location);
         // Default item in skills/ jobs set is "N/A" mapped to false
+        mUsers.child(userKey).child("latitude").setValue(latitude);
+        mUsers.child(userKey).child("longitude").setValue(longitude);
 
         mUsers.child(userKey).child("phone").setValue(phone);
 
@@ -98,6 +102,8 @@ public class DH {
                        String description,
                        float price,
                        String location,
+                       double latitude,
+                       double longitude,
                        ArrayList<String> skills
     ){
         String posterKey = UID;
@@ -107,6 +113,8 @@ public class DH {
         mJobs.child(jobKey).child("jobPrice").setValue(price);
         mJobs.child(jobKey).child("jobDescription").setValue(description);
         mJobs.child(jobKey).child("jobLocation").setValue(location);
+        mJobs.child(jobKey).child("latitude").setValue(latitude);
+        mJobs.child(jobKey).child("longitude").setValue(longitude);
 
         mJobs.child(jobKey).child("jobSkills").child("NONE").setValue(false);
         for(String skill : skills){
@@ -120,7 +128,7 @@ public class DH {
 
         mUsers.child(posterKey).child("userCurrentJob").setValue(jobKey);
 
-        mActiveJobs.child(jobKey).setValue(false);
+        mActiveJobs.child(jobKey).setValue(true);
     }
 
     private boolean end;
@@ -167,7 +175,7 @@ public class DH {
     }
 
     public void updateJob(){
-        // make sure to remove the skill mappings in the SkillMapJobss if job skills change
+        // make sure to remove the skill mappings in the SkillMapJobs if job skills change
     }
 
 }

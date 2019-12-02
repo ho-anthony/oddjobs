@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/popup_border">
+    android:background="@color/backgroundColor">
+    <!--android:background="@drawable/popup_border"-->
+
 
     <android.widget.LinearLayout
         android:layout_width="wrap_content"
@@ -42,14 +44,20 @@
             android:textSize="22sp"
             android:hint="@string/job_pay"/>
 
-        <EditText
+        <TextView
             android:id="@+id/popup_location"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:layout_gravity="center_horizontal"
             android:textSize="22sp"
-            android:hint="@string/job_loc"/>
+            android:text="@string/location"/>
+
+        <fragment android:id="@+id/autocomplete_fragment_popup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
 
         <fragment
             android:id="@+id/add_skills_frag_popup"
