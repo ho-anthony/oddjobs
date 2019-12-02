@@ -1,18 +1,28 @@
 package com.example.oddjobs2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.printservice.PrintService;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +36,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Boolean picUploaded = false;
     Set<String> mySkills;
     DH databaseHelper;
+    StorageReference mStorageRef;
+    DatabaseReference mDatabase;
+    private Uri mImage;
     String userID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mySkills = new HashSet<String>();
         databaseHelper = new DH();
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference("images");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
     }
 
     @Override
@@ -59,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == UPLOAD_RESULT && resultCode == RESULT_OK && data != null) {
             Uri image = data.getData();
+            mImage = data.getData();
             profilePicture.setImageURI(image);
             picUploaded = true;
         }
@@ -76,6 +92,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     phone.getText().toString().trim(),
                     mySkills
             );
+            uploadImage();
             Intent intent = new Intent(this, DecisionActivity.class);
             startActivity(intent);
         } else {
@@ -96,5 +113,24 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    private void uploadImage() {
+        if(mImage != null){
+            StorageReference reference = mStorageRef.child(userID);
+            reference.putFile(mImage)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(ProfileActivity.this, "Upload Success", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(ProfileActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 }
