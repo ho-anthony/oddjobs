@@ -107,7 +107,7 @@ public class DH {
 
         mUsers.child(posterKey).child("userCurrentJob").setValue(jobKey);
 
-        mActiveJobs.child(jobKey).setValue(false);
+        mActiveJobs.child(jobKey).setValue(true);
     }
 
 
@@ -120,7 +120,7 @@ public class DH {
     }
 
     public void updateJob(){
-        // make sure to remove the skill mappings in the SkillMapJobss if job skills change
+        // make sure to remove the skill mappings in the SkillMapJobs if job skills change
     }
 
 }
