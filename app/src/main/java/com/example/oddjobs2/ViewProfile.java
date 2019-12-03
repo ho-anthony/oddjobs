@@ -1,13 +1,24 @@
 package com.example.oddjobs2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,8 +26,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-public class ViewProfile extends AppCompatActivity {
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+public class ViewProfile extends AppCompatActivity implements View.OnClickListener {
 
     TextView fname, lname, age, location, email, phone;
     Button edit, save;
@@ -27,13 +44,17 @@ public class ViewProfile extends AppCompatActivity {
     String userid = user.getUid();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();;
     private DatabaseReference mActiveUsers = mDatabase.getReference("Users");
-    //mDatabase = FirebaseDatabase.getInstance();
-    //mActiveUsers = mDatabase.getReference("Users");
+    StorageReference mStorageRef;
+    ImageView profilePicture;
+    private Uri mImage;
+    private static final int UPLOAD_RESULT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
+        mStorageRef = FirebaseStorage.getInstance().getReference("images");
+        profilePicture = (ImageView) findViewById((R.id.profilePicture));
 
         fname = findViewById(R.id.fnameView);
         lname = findViewById(R.id.lnameView);
@@ -50,7 +71,9 @@ public class ViewProfile extends AppCompatActivity {
         eLoc = findViewById(R.id.editLoc);
         eEmail = findViewById(R.id.editEmail);
         ePhone = findViewById(R.id.editPhone);
+        profilePicture.setOnClickListener(null);
 
+        getImage(userid);
         getData(userid);
     }
 
@@ -71,9 +94,10 @@ public class ViewProfile extends AppCompatActivity {
         eLoc.setVisibility(view.VISIBLE);
         eEmail.setVisibility(view.VISIBLE);
         ePhone.setVisibility(view.VISIBLE);
+        profilePicture.setOnClickListener((View.OnClickListener) this);
 
+        getImage(userid);
         editData(userid);
-
     }
 
     public void saveProfile(View view) {
@@ -96,7 +120,9 @@ public class ViewProfile extends AppCompatActivity {
         eLoc.setVisibility(view.GONE);
         eEmail.setVisibility(view.GONE);
         ePhone.setVisibility(view.GONE);
+        profilePicture.setOnClickListener(null);
 
+        getImage(userid);
         getData(userid);
     }
 
@@ -203,5 +229,49 @@ public class ViewProfile extends AppCompatActivity {
         mActiveUsers.child(userid).child("age").setValue(eAge.getText().toString());
         mActiveUsers.child(userid).child("location").setValue(eLoc.getText().toString());
         mActiveUsers.child(userid).child("phone").setValue(ePhone.getText().toString());
+    }
+
+    private void getImage(String userid){
+        final long ONE_MEGABYTE = 1024 * 1024;
+        mStorageRef.child(userid).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profilePicture.setImageBitmap(bmp);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void uploadImage() {
+        if(mImage != null){
+            StorageReference reference = mStorageRef.child(userid);
+            reference.putFile(mImage);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.profilePicture:
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, UPLOAD_RESULT);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == UPLOAD_RESULT && resultCode == RESULT_OK && data != null) {
+            mImage = data.getData();
+            profilePicture.setImageURI(mImage);
+            uploadImage();
+        }
     }
 }

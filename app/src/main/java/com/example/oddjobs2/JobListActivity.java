@@ -1,5 +1,6 @@
 package com.example.oddjobs2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
@@ -43,6 +44,8 @@ public class JobListActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUsers;
     private DatabaseReference mJobs;
+    String jobID;
+    String status;
 
     public static void checkEmpty() {
         if(adapter.getCount() == 0){
@@ -112,11 +115,10 @@ public class JobListActivity extends AppCompatActivity {
         text = findViewById(R.id.jobListStatus);
         // While there is data to read, add it to the listView
         //while(data.moveToNext()){
-        Log.i("myTag", "showListView: "+t + d);
         catalogue.add(new DataModel(t,d,p,l));
         //}
         // Instantiate custom adapter
-        text.setText("");
+        text.setVisibility(View.GONE);
         adapter = new MyCustomAdapter(catalogue, this);
         listView.setAdapter(adapter);
     }
@@ -132,7 +134,7 @@ public class JobListActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String jobID = dataSnapshot.getValue(String.class);
+                jobID = dataSnapshot.getValue(String.class);
                 if(jobID.equals("NONE")){
                     return;
                 }
@@ -141,9 +143,40 @@ public class JobListActivity extends AppCompatActivity {
                 active.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot1) {
-                        Boolean end = dataSnapshot1.getValue(Boolean.class);
-                        if(end){
+                        Boolean active = dataSnapshot1.getValue(Boolean.class);
+                        /*if(active){
                             getJobInfo();
+                        }*/
+                        if(active){
+                            DatabaseReference taker = mJobs.child(jobID).child("jobTakerKey");
+                            taker.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    try {
+                                        Boolean key = dataSnapshot.getValue(Boolean.class);
+                                        if(!key){
+                                            status = "No Match";
+                                            getJobInfo();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        String key = dataSnapshot.getValue(String.class);
+                                        if(key != null){
+                                            status = "In Progress";
+                                            getJobInfo();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    throw databaseError.toException();
+                                }
+                            });
                         }
                     }
 
@@ -179,7 +212,7 @@ public class JobListActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot1) {
                         String end = dataSnapshot1.getValue(String.class);
                         Log.i("myTag", "onDataChange:"+end);
-                        showListView(end, "No Match", end, end);
+                        showListView(end, status, end, end);
                     }
 
                     @Override

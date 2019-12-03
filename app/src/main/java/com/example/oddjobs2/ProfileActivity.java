@@ -1,10 +1,12 @@
 package com.example.oddjobs2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.printservice.PrintService;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -20,6 +24,11 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +43,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Boolean picUploaded = false;
     Set<String> mySkills;
     DH databaseHelper;
+    StorageReference mStorageRef;
+    DatabaseReference mDatabase;
+    private Uri mImage;
     String userID;
     String location;
     double latitude, longitude;
@@ -54,6 +66,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mySkills = new HashSet<String>();
         databaseHelper = new DH();
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference("images");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
         // https://developers.google.com/places/android-sdk/start
         // Initialize the SDK
@@ -82,8 +96,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 Log.i("fatDebug", "An error occurred: " + status);
             }
         });
-
-
     }
 
     @Override
@@ -101,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == UPLOAD_RESULT && resultCode == RESULT_OK && data != null) {
             Uri image = data.getData();
+            mImage = data.getData();
             profilePicture.setImageURI(image);
             picUploaded = true;
         }
@@ -121,11 +134,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     phone.getText().toString().trim(),
                     skills
             );
+            uploadImage();
             Intent intent = new Intent(this, DecisionActivity.class);
             startActivity(intent);
         } else {
             Toast.makeText(this,"Please upload a picture and fill in all of your information",Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, mySkills.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, mySkills.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -141,5 +155,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    private void uploadImage() {
+        if(mImage != null){
+            StorageReference reference = mStorageRef.child(userID);
+            reference.putFile(mImage);
+        }
     }
 }

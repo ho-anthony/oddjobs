@@ -118,7 +118,7 @@ public class AddSkillsFragment extends Fragment {
     @SuppressLint("ResourceAsColor")
     public void updateSkillSet(String query){
         final TextView skill_text = new TextView(mContext);
-        Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
         skill_text.setText(query);
         skill_text.setTextColor(Color.WHITE);
         if(skillSetSet.size()%2==0){

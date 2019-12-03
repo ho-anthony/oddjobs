@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "576748207309-sg7h63tlntbd85ofriq82ulj4f1fi5rr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.oddjobs2",
+            "certificate_hash": "20ac211cbdd99cf0aecae19713d45700a5f156b2"
+          }
+        },
+        {
           "client_id": "576748207309-h0mc2vlcb3dgvg8hm444h3pfrcr2cc9p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
