@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Fade;
@@ -84,6 +85,17 @@ public class SwipeActivity extends AppCompatActivity {
     private ArrayList<String> sortedKeys;
     private int index;
 
+    private double userLatitude;
+    private double userLongitude;
+
+    private double userJobLatitude;
+    private double userJobLongitude;
+
+    private String userJobKey;
+
+    private boolean lookingForJob;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +105,13 @@ public class SwipeActivity extends AppCompatActivity {
         sortedKeys = new ArrayList<String>();
         index = 0;
 
+        userLatitude = 0;
+        userLongitude = 0;
+        userJobLatitude = 0;
+        userJobLongitude = 0;
+        userJobKey = "";
+
+        lookingForJob = false;
 
         keys = new Hashtable<>();
         profilePic = findViewById(R.id.swipe_profile_pic);
@@ -107,33 +126,46 @@ public class SwipeActivity extends AppCompatActivity {
         final PlacesClient placesClient = Places.createClient(this);
 
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if(extras != null){
             if(extras.getStringArrayList("seenKeys") != null){
                 ArrayList<String> seenKeysArray = extras.getStringArrayList("seenKeys");
                 seenKeys = new HashSet<String>(seenKeysArray);
             }
-            if(extras.getString("userChoice").equals("workRequest")){
-                pullUserData();
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                checkActiveJob(uid);
-            }
-            else if(extras.getString("userChoice").equals("workSearch")){
-                pullJobData();
-                //https://stackoverflow.com/questions/41664409/wait-for-5-seconds/41664445
-                //TODO: FIX THIS HARDCODED WAIT
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        Log.d("fatDebug", "runnable running");
-                        // TODO: ASSUMING KEYS IS POPULATED
-                        displayJobKeys();
+
+            initiateUserData(); //should be called after seenKeys is set.
+            //https://stackoverflow.com/questions/41664409/wait-for-5-seconds/41664445
+            //TODO: FIX THIS HARDCODED WAIT
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    if(extras.getString("userChoice").equals("workRequest")){
+
+                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        checkActiveJob(uid);
+                        // Pull user data in check active job method
                     }
-                }, 2000);
-            }
-            else{
-                //throw some exception
-            }
+                    else if(extras.getString("userChoice").equals("workSearch")){
+                        lookingForJob = true;
+                        pullJobData();
+                        //https://stackoverflow.com/questions/41664409/wait-for-5-seconds/41664445
+                        //TODO: FIX THIS HARDCODED WAIT
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                Log.d("fatDebug", "runnable running");
+                                // TODO: ASSUMING KEYS IS POPULATED
+                                displayJobKeys();
+                            }
+                        }, 2000);
+                    }
+                    else{
+                        //throw some exception
+                    }
+                }
+            }, 1000);
+
+
         }
         else{
             //By default pull user data for now. For testing
@@ -142,6 +174,66 @@ public class SwipeActivity extends AppCompatActivity {
         // https://developer.android.com/training/transitions
 
 
+    }
+
+    public void initiateUserData(){
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+
+        //TODO: SET USER LOCATION, USER JOB LOCATION IS APPLICABLE
+        //TODO: SET WHETHER OR NOT USER JOB IS MATCHED
+        //TODO: SET UID and User Job to seenKeys so user doesn't see themselves
+
+        seenKeys.add(uid);
+        DatabaseReference userRef = dh.mUsers.child(uid);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    if(data.getKey().equals("latitude")){
+                        userLatitude = (double)data.getValue();
+                    }
+                    else if(data.getKey().equals("longitude")){
+                        userLongitude = (double)data.getValue();
+                    }
+                    else if(data.getKey().equals("userCurrentJob")){
+                        userJobKey = data.getValue().toString();
+
+                        if(!userJobKey.equals("NONE")){
+                            seenKeys.add(userJobKey);
+                            DatabaseReference userJobRef = dh.mJobs.child(userJobKey);
+                            userJobRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    String jobPoster = "";
+                                    String jobTaker = "";
+                                    for(DataSnapshot data: dataSnapshot.getChildren()){
+                                        if(data.getKey().equals("latitude")){
+                                            userJobLatitude = (double)data.getValue();
+                                        }
+                                        else if(data.getKey().equals("longitude")){
+                                            userJobLongitude = (double)data.getValue();
+                                        }
+                                        // TODO: Implement job poster job taker stuff
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    throw databaseError.toException();
+                                }
+                            });
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     // https://developer.android.com/guide/topics/ui/menus
@@ -177,7 +269,76 @@ public class SwipeActivity extends AppCompatActivity {
 
 
     public void pullUserData() {
+        // TODO: Get skills that user requires
+        // TODO: query job to skill mapping for all available jobs
+        // TODO: sort jobs based on how many times they're seen.
+        Log.d("fatDebug", "Pulling job data");
+        final DH dh = new DH();
+        String userKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d("fatDebug", "user job key is " + userJobKey);
+        Query qSkills = dh.mJobs.child(userJobKey).child("jobSkills");
+        qSkills.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String skill = data.getKey();
+                    Log.d("fatDebug", "user skill: "+skill);
 
+
+                    Query mappingsToJobs = dh.mSkillMapUsers.child(skill).child("userKeys");
+                    mappingsToJobs.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for(DataSnapshot data: dataSnapshot.getChildren()){
+                                String userKey = data.getKey();
+
+                                //Query activeJobs = dh.mUsers.child(userKey).orderByChild("active").equalTo(true);
+                                Query activeJobs = dh.mUsers.child(userKey);
+                                activeJobs.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String userKey = dataSnapshot.getKey();
+                                        if (keys.containsKey(userKey)) {
+                                            Log.d("fatDebug", "Incremented key");
+                                            Integer oldVal = keys.get(userKey);
+                                            keys.put(userKey, new Integer(oldVal.intValue() + 1));
+                                        } else {
+                                            Log.d("fatDebug", "added New Key");
+                                            keys.put(userKey, new Integer(0));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Log.d("fatDebug", "skill mapping retrieval canceled");
+                                        throw databaseError.toException();
+                                    }
+
+                                });
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d("fatDebug", "skill mapping retrieval canceled");
+                            throw databaseError.toException();
+                        }
+                    });
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
     }
 
     public void pullJobData(){
@@ -276,15 +437,17 @@ public class SwipeActivity extends AppCompatActivity {
             generateLayout(null);
         }
 
-        DH dh = new DH();
+        final DH dh = new DH();
         DatabaseReference ref = dh.mJobs.child(maxKey);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<String> myData = new ArrayList<String>();
-                for(int i=0; i<4; i++){
+                for(int i=0; i<5; i++){
                     myData.add("");
                 }
+                double latitude = 0;
+                double longitude = 0;
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     String dataKey = data.getKey();
                     if(dataKey.equals("jobTitle")){
@@ -302,7 +465,30 @@ public class SwipeActivity extends AppCompatActivity {
                     else if(dataKey.equals("jobPosterKey")){
                         getImage(data.getValue().toString());
                     }
+                    else if(dataKey.equals("latitude")){
+                        latitude = (double)data.getValue();
+                    }
+                    else if(dataKey.equals("longitude")){
+                        longitude = (double)data.getValue();
+                    }
                 }
+
+
+
+
+
+                //https://stackoverflow.com/questions/2741403/get-the-distance-between-two-geo-points
+                Location loc1 = new Location("");
+                loc1.setLatitude(latitude);
+                loc1.setLongitude(longitude);
+
+                Location loc2 = new Location("");
+                loc2.setLatitude(userLatitude);
+                loc2.setLongitude(userLongitude);
+
+                float distanceInMeters = loc1.distanceTo(loc2);
+                double miles = distanceInMeters /1609.344;
+                myData.set(4, (int)miles + " miles from you");
                 generateLayout(myData);
             }
 
@@ -314,6 +500,116 @@ public class SwipeActivity extends AppCompatActivity {
         });
 
         DatabaseReference skillsRef = dh.mJobs.child(maxKey).child("jobSkills");
+        skillsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> myData = new ArrayList<String>();
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    if(!data.getKey().equals("NONE")){
+                        myData.add(data.getKey());
+                    }
+                }
+                displaySkills(myData);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
+        //TODO: REMOVE KEY
+        seenKeys.add(maxKey);
+    }
+
+    public void displayUserKeys(){
+        //TODO: KEEP IT SORTED TO BEGIN WITH INSTEAD OF ITERATING EACH TIME.
+        Log.d("fatDebug", "displayKeys called");
+        int maxKeyValue = -1;
+        String maxKey = "default";
+        Object[] keyArray = keys.keySet().toArray();
+        for(Object key: keyArray){
+
+            if(keys.get(key).intValue() > maxKeyValue){
+                if(!seenKeys.contains(key)){
+                    maxKeyValue = keys.get(key).intValue();
+                    maxKey = (String)key;
+                }
+
+            }
+        }
+
+
+        Log.d("fatDebug", maxKey);
+        //TODO: GENERATE LAYOUT HERE
+
+        if(maxKey.equals("default")){
+            generateLayout(null);
+        }
+
+        final DH dh = new DH();
+        DatabaseReference ref = dh.mUsers.child(maxKey);
+        getImage(maxKey);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> myData = new ArrayList<String>();
+                for(int i=0; i<5; i++){
+                    myData.add("");
+                }
+
+                double latitude = 0;
+                double longitude = 0;
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String dataKey = data.getKey();
+                    if(dataKey.equals("firstName")){
+                        myData.set(0,"First: " + data.getValue());
+                    }
+                    else if(dataKey.equals("lastName")){
+                        myData.set(1,"Last: " + data.getValue().toString());
+                    }
+                    else if(dataKey.equals("age")){
+                        myData.set(2, "Age: " + data.getValue());
+                    }
+                    else if(dataKey.equals("location")){
+                        myData.set(3, "Location: " + data.getValue());
+                    }
+                    else if(dataKey.equals("latitude")){
+                        latitude = (double)data.getValue();
+                    }
+                    else if(dataKey.equals("longitude")){
+                        longitude = (double)data.getValue();
+                    }
+
+                }
+
+
+
+
+
+                //https://stackoverflow.com/questions/2741403/get-the-distance-between-two-geo-points
+                Location loc1 = new Location("");
+                loc1.setLatitude(latitude);
+                loc1.setLongitude(longitude);
+
+                Location loc2 = new Location("");
+                loc2.setLatitude(userJobLatitude);
+                loc2.setLongitude(userJobLongitude);
+
+                float distanceInMeters = loc1.distanceTo(loc2);
+                double miles = distanceInMeters /1609.344;
+                myData.set(4, (int)miles + " miles from you");
+                generateLayout(myData);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
+
+        DatabaseReference skillsRef = dh.mUsers.child(maxKey).child("userSkills");
         skillsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -580,6 +876,19 @@ public class SwipeActivity extends AppCompatActivity {
                     showPopup();
                     return;
                 }
+                else{
+                    pullUserData();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            Log.d("fatDebug", "runnable running");
+                            // TODO: ASSUMING KEYS IS POPULATED
+                            displayUserKeys();
+                        }
+                    }, 2000);
+                    return;
+                }
+                /*
                 Log.i("myTag", "onDataChange:" + jobID);
                 DatabaseReference active = mJobs.child(jobID).child("active");
                 active.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -596,6 +905,8 @@ public class SwipeActivity extends AppCompatActivity {
                         throw databaseError.toException();
                     }
                 });
+
+                 */
             }
 
             @Override

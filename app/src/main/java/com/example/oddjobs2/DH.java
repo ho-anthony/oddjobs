@@ -208,8 +208,12 @@ public class DH {
 
 
 
-    public void acceptJob(){
+    public void acceptJob(String jobID){
         // Job is taken off ActiveJobs
+    }
+
+    public void acceptUser(String userID){
+
     }
 
 
