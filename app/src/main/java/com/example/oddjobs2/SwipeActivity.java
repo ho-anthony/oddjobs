@@ -57,7 +57,7 @@ public class SwipeActivity extends AppCompatActivity {
     Button post;
     EditText title, des, pay;
     DH dh = new DH();
-    ArrayList<String> mySkills;
+    Set <String> mySkills;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUsers;
     private DatabaseReference mJobs;
@@ -76,12 +76,14 @@ public class SwipeActivity extends AppCompatActivity {
     private ArrayList<String> jobData;
     private ArrayList<String> userSkills;
 
+    private Set<String> seenUsers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         mContext = SwipeActivity.this;
-        mySkills = new ArrayList<>();
+        mySkills = new HashSet<String>();
 
         base = findViewById(R.id.linear_layout_swipe);
         skillSet = findViewById(R.id.skill_set_swipe);
@@ -89,6 +91,7 @@ public class SwipeActivity extends AppCompatActivity {
         userData = new ArrayList<String>();
         jobData = new ArrayList<String>();
         userSkills = new ArrayList<String>();
+        seenUsers = new HashSet<String>();
 
         // https://developers.google.com/places/android-sdk/start
         // Initialize the SDK
@@ -343,8 +346,9 @@ public class SwipeActivity extends AppCompatActivity {
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     //ArrayList<String> skills;
                     //skills = addSkills.getSkills();
-                    Log.i("myTag", "newJob: "+mySkills);
-                    dh.newJob(uid,t,d,newP,location,latitude,longitude,mySkills);
+                    ArrayList<String> skills = new ArrayList<String>();
+                    skills.addAll(mySkills);
+                    dh.newJob(uid,t,d,newP,location,latitude,longitude,skills);
                     popupWindow.dismiss();
                 }
             }

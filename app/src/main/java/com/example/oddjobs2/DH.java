@@ -170,12 +170,40 @@ public class DH {
         // Job is taken off ActiveJobs
     }
 
+
     public void updateUser(){
         // make sure to remove the skill mappings in the SkillMapUsers if user skills change
     }
 
     public void updateJob(){
         // make sure to remove the skill mappings in the SkillMapJobs if job skills change
+    }
+
+    public void getUsers(){
+        // Get user job, check skill list, return all users with those skills
+            /*
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("server/saving-data/fireblog/posts");
+
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post post = dataSnapshot.getValue(Post.class);
+                System.out.println(post);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        */
+
+    }
+
+    public void getJobs(){
+        // Get user, check skills list, return all jobs with those skills
     }
 
 }

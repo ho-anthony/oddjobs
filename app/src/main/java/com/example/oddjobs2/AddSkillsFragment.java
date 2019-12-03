@@ -158,17 +158,11 @@ public class AddSkillsFragment extends Fragment {
         } else if(mContext instanceof SwipeActivity) {
             SwipeActivity activity = (SwipeActivity) mContext;
             activity.mySkills.add(skill_text.getText().toString());
-            skills.add(skill_text.getText().toString());
-            Log.i("myTage", "onClick: in Swipe"+skills);
         }
 
     }
 
 
-    public ArrayList<String> getSkills(){
-        Log.i("myTagsss", "onClick: in Swipe"+skills);
-        return skills;
-    }
 
     @Override
     public void onAttach(Context context) {
