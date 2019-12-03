@@ -19,9 +19,11 @@
 
         <TextView
             android:id="@+id/list_item_name"
-            android:layout_width="wrap_content"
+            style="@style/TitleWhite"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginTop="10dp"
             android:gravity="start"
             android:paddingStart="8dp"
             android:text="Job Name:"
@@ -30,7 +32,8 @@
 
         <TextView
             android:id="@+id/list_item_des"
-            android:layout_width="wrap_content"
+            style="@style/TitleWhite"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:gravity="start"
@@ -56,13 +59,16 @@
 
         <TextView
             android:id="@+id/listName"
+            style="@style/TitleWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/listStatus"
+            style="@style/TitleWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

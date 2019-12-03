@@ -2,62 +2,63 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/backgroundColor">
-    <!--android:background="@drawable/popup_border"-->
+    android:background="@drawable/popup_border">
+    <!--android:background="@color/backgroundColor"-->
 
 
     <android.widget.LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="383dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="15dp"
-        android:background="@drawable/popup_shape">
+        android:background="@drawable/popup_shape"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/popup_title"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal"
-            android:textSize="22sp"
-            android:hint="@string/job_title"/>
+            android:layout_margin="30dp"
+            android:hint="@string/job_title"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/popup_des"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal"
-            android:textSize="22sp"
-            android:hint="@string/job_des"/>
+            android:layout_margin="30dp"
+            android:hint="@string/job_des"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/popup_pay"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal"
-            android:textSize="22sp"
-            android:hint="@string/job_pay"/>
+            android:layout_margin="30dp"
+            android:hint="@string/job_pay"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/popup_location"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal"
-            android:textSize="22sp"
-            android:text="@string/location"/>
+            android:layout_margin="30dp"
+            android:text="@string/location"
+            android:textSize="18sp" />
 
-        <fragment android:id="@+id/autocomplete_fragment_popup"
+        <fragment
+            android:id="@+id/autocomplete_fragment_popup"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            />
+            android:layout_marginBottom="10dp" />
 
         <fragment
             android:id="@+id/add_skills_frag_popup"
@@ -67,12 +68,13 @@
 
         <Button
             android:id="@+id/popup_post"
+            style="@style/ButtonTeal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
             android:layout_gravity="center_horizontal"
-            android:textSize="22sp"
-            android:text="@string/post_job_button"/>
+            android:layout_margin="30dp"
+            android:text="@string/post_job_button"
+            android:textSize="22sp" />
 
     </android.widget.LinearLayout>
 

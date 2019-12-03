@@ -141,6 +141,7 @@ public class SwipeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.menu_sign_out:
+                FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(this, LoginActivity.class));
                 return true;
             default:

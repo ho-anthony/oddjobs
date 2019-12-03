@@ -14,9 +14,9 @@
         tools:layout_editor_absoluteY="1dp">
 
         <Button
-            style="@style/TitleWhite"
             android:id="@+id/workRequestButton"
-            android:layout_width="wrap_content"
+            style="@style/TitleWhite"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/yellowButton"
@@ -24,9 +24,9 @@
             android:text="@string/work_request_button" />
 
         <Button
-            style="@style/TitleWhite"
             android:id="@+id/workSearchButton"
-            android:layout_width="wrap_content"
+            style="@style/TitleWhite"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/tealButton"
