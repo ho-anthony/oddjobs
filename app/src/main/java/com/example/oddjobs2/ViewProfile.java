@@ -251,19 +251,7 @@ public class ViewProfile extends AppCompatActivity implements View.OnClickListen
     private void uploadImage() {
         if(mImage != null){
             StorageReference reference = mStorageRef.child(userid);
-            reference.putFile(mImage)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(ViewProfile.this, "Upload Success", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ViewProfile.this, "Upload Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            reference.putFile(mImage);
         }
     }
 
