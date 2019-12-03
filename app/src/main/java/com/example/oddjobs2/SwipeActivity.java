@@ -4,9 +4,12 @@ import java.util.*;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -29,6 +32,8 @@ import android.view.View;
 import android.view.MotionEvent;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -40,7 +45,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -71,7 +78,11 @@ public class SwipeActivity extends AppCompatActivity {
     double latitude, longitude;
     // Source end
 
-    private Set<String> seenUsers;
+    private Set<String> seenKeys;
+
+    private Map<String, Integer> keys;
+    private ArrayList<String> sortedKeys;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +90,16 @@ public class SwipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_swipe);
         mContext = SwipeActivity.this;
         mySkills = new HashSet<String>();
+        sortedKeys = new ArrayList<String>();
+        index = 0;
+
+
+        keys = new Hashtable<>();
+        profilePic = findViewById(R.id.swipe_profile_pic);
 
         base = findViewById(R.id.linear_layout_swipe);
         skillSet = findViewById(R.id.skill_set_swipe);
-        seenUsers = new HashSet<String>();
+        seenKeys = new HashSet<String>();
 
         // https://developers.google.com/places/android-sdk/start
         // Initialize the SDK
@@ -92,6 +109,10 @@ public class SwipeActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
+            if(extras.getStringArrayList("seenKeys") != null){
+                ArrayList<String> seenKeysArray = extras.getStringArrayList("seenKeys");
+                seenKeys = new HashSet<String>(seenKeysArray);
+            }
             if(extras.getString("userChoice").equals("workRequest")){
                 pullUserData();
                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -99,6 +120,16 @@ public class SwipeActivity extends AppCompatActivity {
             }
             else if(extras.getString("userChoice").equals("workSearch")){
                 pullJobData();
+                //https://stackoverflow.com/questions/41664409/wait-for-5-seconds/41664445
+                //TODO: FIX THIS HARDCODED WAIT
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("fatDebug", "runnable running");
+                        // TODO: ASSUMING KEYS IS POPULATED
+                        displayJobKeys();
+                    }
+                }, 2000);
             }
             else{
                 //throw some exception
@@ -150,10 +181,167 @@ public class SwipeActivity extends AppCompatActivity {
     }
 
     public void pullJobData(){
+        // TODO: Get skills that user requires
+        // TODO: query job to skill mapping for all available jobs
+        // TODO: sort jobs based on how many times they're seen.
+        Log.d("fatDebug", "Pulling job data");
+        final DH dh = new DH();
+        String userKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Query qSkills = dh.mUsers.child(userKey).child("userSkills");
+        qSkills.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String skill = data.getKey();
+                    Log.d("fatDebug", "user skill: "+skill);
 
+
+                        Query mappingsToJobs = dh.mSkillMapJobs.child(skill).child("jobKeys");
+                        mappingsToJobs.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                for(DataSnapshot data: dataSnapshot.getChildren()){
+                                    String jobKey = data.getKey();
+
+                                    Query activeJobs = dh.mJobs.child(jobKey).orderByChild("active").equalTo(true);
+                                    activeJobs.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            String jobKey = dataSnapshot.getKey();
+                                            if (keys.containsKey(jobKey)) {
+                                                Log.d("fatDebug", "Incremented key");
+                                                Integer oldVal = keys.get(jobKey);
+                                                keys.put(jobKey, new Integer(oldVal.intValue() + 1));
+                                            } else {
+                                                Log.d("fatDebug", "added New Key");
+                                                keys.put(jobKey, new Integer(0));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            Log.d("fatDebug", "skill mapping retrieval canceled");
+                                            throw databaseError.toException();
+                                        }
+
+                                    });
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d("fatDebug", "skill mapping retrieval canceled");
+                                throw databaseError.toException();
+                            }
+                        });
+                    }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
+    }
+
+    public void displayJobKeys(){
+        //TODO: KEEP IT SORTED TO BEGIN WITH INSTEAD OF ITERATING EACH TIME.
+        Log.d("fatDebug", "displayKeys called");
+         int maxKeyValue = -1;
+         String maxKey = "default";
+         Object[] keyArray = keys.keySet().toArray();
+         for(Object key: keyArray){
+
+             if(keys.get(key).intValue() > maxKeyValue){
+                 if(!seenKeys.contains(key)){
+                     maxKeyValue = keys.get(key).intValue();
+                     maxKey = (String)key;
+                 }
+
+             }
+         }
+
+
+         Log.d("fatDebug", maxKey);
+         //TODO: GENERATE LAYOUT HERE
+
+        if(maxKey.equals("default")){
+            generateLayout(null);
+        }
+
+        DH dh = new DH();
+        DatabaseReference ref = dh.mJobs.child(maxKey);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> myData = new ArrayList<String>();
+                for(int i=0; i<4; i++){
+                    myData.add("");
+                }
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String dataKey = data.getKey();
+                    if(dataKey.equals("jobTitle")){
+                        myData.set(0,"Title: " + data.getValue());
+                    }
+                    else if(dataKey.equals("jobPrice")){
+                        myData.set(1,"Price: " + data.getValue().toString());
+                    }
+                    else if(dataKey.equals("jobDescription")){
+                        myData.set(2, "Description: " + data.getValue());
+                    }
+                    else if(dataKey.equals("jobLocation")){
+                        myData.set(3, "Location: " + data.getValue());
+                    }
+                    else if(dataKey.equals("jobPosterKey")){
+                        getImage(data.getValue().toString());
+                    }
+                }
+                generateLayout(myData);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
+
+        DatabaseReference skillsRef = dh.mJobs.child(maxKey).child("jobSkills");
+        skillsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> myData = new ArrayList<String>();
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    if(!data.getKey().equals("NONE")){
+                        myData.add(data.getKey());
+                    }
+                }
+                displaySkills(myData);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
+        //TODO: REMOVE KEY
+        seenKeys.add(maxKey);
     }
 
     public void generateLayout(ArrayList<String> data){
+        if(data == null){
+            data = new ArrayList<String>();
+            data.add("You have no potential matches, sorry!");
+        }
+
         for(int i=0; i<data.size(); i++){
             TextView text = new TextView(getApplicationContext());
             text.setText(data.get(i));
@@ -176,6 +364,9 @@ public class SwipeActivity extends AppCompatActivity {
     }
 
     public void displaySkills(List<String> skills){
+        if(skills == null){
+            return;
+        }
         for(int i=0; i<skills.size(); i++){
             TextView skill_text = new TextView(mContext);
             skill_text.setText(skills.get(i));
@@ -214,32 +405,37 @@ public class SwipeActivity extends AppCompatActivity {
                     if (x2 > x1)
                     {
                         // https://stackoverflow.com/questions/3053761/reload-activity-in-android
-                        /*
+
                         finish();
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         startActivity(getIntent());
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         Toast.makeText(SwipeActivity.this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
 
-                         */
+
 
                         // TODO: DISPLAY NEXT USER/ JOB
+                        //TODO: WHEN MATCHED, DISPLAY POPUP TO CHAT OR UNMATCH. JOB POSTER CAN DELETE THEIR JOB HERE
                     }
 
                     // Right to left swipe action
                     else
                     {
                         // https://stackoverflow.com/questions/3053761/reload-activity-in-android
-                        /*
+
                         finish();
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+                        Intent myIntent = getIntent();
+                        myIntent.putStringArrayListExtra("seenKeys", new ArrayList<String>(seenKeys));
+
                         startActivity(getIntent());
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         Toast.makeText(SwipeActivity.this, "Right to Left swipe [Previous]", Toast.LENGTH_SHORT).show ();
 
-                         */
+
                         // TODO: DISPLAY NEXT USER/ JOB
-                        // TODO: WHEN MATCHED, DISPLAY POPUP TO CHAT OR UNMATCH. JOB POSTER CAN DELETE THEIR JOB HERE
+
                     }
 
                 }
@@ -405,6 +601,23 @@ public class SwipeActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 throw databaseError.toException();
+            }
+        });
+    }
+
+    private void getImage(String userid){
+        final long ONE_MEGABYTE = 1024 * 1024;
+        FirebaseStorage.getInstance().getReference("images").child(userid).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profilePic.setImageBitmap(bmp);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
             }
         });
     }

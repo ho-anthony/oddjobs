@@ -16,13 +16,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_marginTop="50dp"
+            android:id="@+id/linear_swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/swipe-profile-pic"
+                android:id="@+id/swipe_profile_pic"
                 style="@style/RoundProfile"
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@drawable/ic_launcher_background" />
@@ -34,10 +35,10 @@
                 android:orientation="vertical" />
 
             <com.google.android.flexbox.FlexboxLayout
-                android:layout_marginTop="30dp"
                 android:id="@+id/skill_set_swipe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:gravity="center"
                 app:alignContent="stretch"
                 app:alignItems="stretch"
