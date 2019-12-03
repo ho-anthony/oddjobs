@@ -160,19 +160,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void uploadImage() {
         if(mImage != null){
             StorageReference reference = mStorageRef.child(userID);
-            reference.putFile(mImage)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(ProfileActivity.this, "Upload Success", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProfileActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            reference.putFile(mImage);
         }
     }
 }
