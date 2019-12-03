@@ -139,7 +139,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         } else {
             Toast.makeText(this,"Please upload a picture and fill in all of your information",Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, mySkills.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, mySkills.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
