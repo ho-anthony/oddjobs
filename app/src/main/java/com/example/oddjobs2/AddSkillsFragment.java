@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -21,6 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +44,9 @@ public class AddSkillsFragment extends Fragment {
     private Context mContext;
     private Set<String> skillSetSet;
     private List<String> skillSuggestionsList;
+    private List<String> skillSuggestionsListFiltered;
     ArrayList<String> skills = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
     public AddSkillsFragment() {
         // Required empty public constructor
@@ -57,15 +66,23 @@ public class AddSkillsFragment extends Fragment {
         skillsList = view.findViewById(R.id.skills_list_frag);
         skillSet = view.findViewById(R.id.skill_set_frag);
 
+        /*
         skillSuggestionsList = new ArrayList<String>();
         //hardcoded for now
         skillSuggestionsList.add("apple");
         skillSuggestionsList.add("pear");
         skillSuggestionsList.add("banana");
+        */
+        DH dh = new DH();
+        skillSuggestionsList = new ArrayList<String>();
+        skillSuggestionsListFiltered = new ArrayList<String>();
+        getSkills();
+
+
         skillSetSet = new HashSet<String>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
-                android.R.layout.simple_dropdown_item_1line, skillSuggestionsList);
+        adapter = new ArrayAdapter<String>(mContext,
+                android.R.layout.simple_dropdown_item_1line, skillSuggestionsListFiltered);
 
         //https://stackoverflow.com/questions/21295328/android-listview-with-onclick-items
         skillsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,7 +99,18 @@ public class AddSkillsFragment extends Fragment {
         skillsSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             //https://stackoverflow.com/questions/5713653/how-to-get-the-events-of-searchview-in-android
             @Override
-            public boolean onQueryTextChange(String newText){
+            public boolean onQueryTextChange(String newText)
+            {
+                Log.d("fatDebug", newText);
+                skillSuggestionsListFiltered.clear();
+                for(String skill: skillSuggestionsList){
+
+                    if(skill.contains(newText)){
+                        Log.d("fatDebug", skill);
+                        skillSuggestionsListFiltered.add(skill);
+                    }
+                }
+                adapter.notifyDataSetChanged();
                 return onSkillSearchQuery(newText);
             }
             @Override
@@ -93,6 +121,30 @@ public class AddSkillsFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void getSkills(){
+        // TODO: pull from database job skills that match query
+        // TODO: make skills order by most searched
+
+        //TODO: right now, just gets popular job skills, not users
+        DH dh = new DH();
+        Query popularSkills = dh.mSkillMapJobs.orderByChild("count");
+        popularSkills.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    Log.d("fatDebug", data.getKey());
+                    skillSuggestionsList.add(0, data.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("fatDebug", "skill retrieval canceled");
+                throw databaseError.toException();
+            }
+        });
     }
 
 

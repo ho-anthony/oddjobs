@@ -22,13 +22,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:orientation="vertical"
-                android:paddingTop="75dp">
+                android:paddingTop="100dp">
 
                 <TextView
-                    style="@style/TitleYellow"
                     android:id="@+id/add_skills_word"
+                    style="@style/TitleYellow"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/skills_needed" />
 
@@ -39,30 +39,35 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="1dp"
-                    android:layout_marginBottom="75dp"
+                    android:layout_marginBottom="100dp"
                     android:gravity="center">
 
                 </SearchView>
             </LinearLayout>
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:fillViewport="true"
-                android:paddingBottom="10dp">
+                android:orientation="vertical">
 
 
                 <ListView
-                    style="@style/ButtonWhite"
-                    android:padding="10dp"
                     android:id="@+id/skills_list_frag"
+
+
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </ScrollView>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:animateLayoutChanges="true"
+
+                    android:padding="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -71,11 +71,6 @@ public class SwipeActivity extends AppCompatActivity {
     double latitude, longitude;
     // Source end
 
-    //Constant hardcoded stuff for now ----------
-    private ArrayList<String> userData;
-    private ArrayList<String> jobData;
-    private ArrayList<String> userSkills;
-
     private Set<String> seenUsers;
 
     @Override
@@ -87,10 +82,6 @@ public class SwipeActivity extends AppCompatActivity {
 
         base = findViewById(R.id.linear_layout_swipe);
         skillSet = findViewById(R.id.skill_set_swipe);
-
-        userData = new ArrayList<String>();
-        jobData = new ArrayList<String>();
-        userSkills = new ArrayList<String>();
         seenUsers = new HashSet<String>();
 
         // https://developers.google.com/places/android-sdk/start
@@ -156,38 +147,10 @@ public class SwipeActivity extends AppCompatActivity {
 
     public void pullUserData() {
 
-
-
-        //HARDCODED DATA FOR NOW------------------------
-        userData.add("John Smith");
-        userData.add("Age: 37");
-        userData.add("Location: 30 miles from you");
-        userData.add("Bio: I love cats!");
-
-        userSkills.add("fishing");
-        userSkills.add("drawing");
-        userSkills.add("Some kind of long, complex skill");
-        userSkills.add("CARPENTRY");
-        userSkills.add("Benchpressing");
-
-        generateLayout(userData);
-        displaySkills(userSkills);
     }
 
     public void pullJobData(){
-        //Pull all data from database and convert displayed text to string format.
-        //HARDCODED DATA FOR NOW------------------------
-        userSkills.add("fishing");
-        userSkills.add("drawing");
-        userSkills.add("Some kind of long, complex skill");
-        userSkills.add("CARPENTRY");
-        userSkills.add("Benchpressing");
 
-        jobData.add("Pancake Maker");
-        jobData.add("Location: 0.5 miles from you");
-        jobData.add("Description: Looking for a good chef.");
-        generateLayout(jobData);
-        displaySkills(userSkills);
     }
 
     public void generateLayout(ArrayList<String> data){
@@ -251,22 +214,32 @@ public class SwipeActivity extends AppCompatActivity {
                     if (x2 > x1)
                     {
                         // https://stackoverflow.com/questions/3053761/reload-activity-in-android
+                        /*
                         finish();
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         startActivity(getIntent());
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         Toast.makeText(SwipeActivity.this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
+
+                         */
+
+                        // TODO: DISPLAY NEXT USER/ JOB
                     }
 
                     // Right to left swipe action
                     else
                     {
                         // https://stackoverflow.com/questions/3053761/reload-activity-in-android
+                        /*
                         finish();
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         startActivity(getIntent());
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         Toast.makeText(SwipeActivity.this, "Right to Left swipe [Previous]", Toast.LENGTH_SHORT).show ();
+
+                         */
+                        // TODO: DISPLAY NEXT USER/ JOB
+                        // TODO: WHEN MATCHED, DISPLAY POPUP TO CHAT OR UNMATCH. JOB POSTER CAN DELETE THEIR JOB HERE
                     }
 
                 }
@@ -279,6 +252,47 @@ public class SwipeActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
     // Source end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void showPopup(){
         // inflate the layout of the popup window
@@ -366,7 +380,7 @@ public class SwipeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jobID = dataSnapshot.getValue(String.class);
-                if(jobID.equals("NONE")){
+                if((jobID == null) || (jobID.equals("NONE"))){
                     showPopup();
                     return;
                 }

@@ -1,16 +1,20 @@
 package com.example.oddjobs2;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -36,13 +40,13 @@ public class DH {
     }
     */
 
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mActiveUsers;
-    private DatabaseReference mSkillMapUsers;
-    private DatabaseReference mSkillMapJobs;
-    private DatabaseReference mActiveJobs;
-    private DatabaseReference mUsers;
-    private DatabaseReference mJobs;
+    public FirebaseDatabase mDatabase;
+    public DatabaseReference mActiveUsers;
+    public DatabaseReference mSkillMapUsers;
+    public DatabaseReference mSkillMapJobs;
+    public DatabaseReference mActiveJobs;
+    public DatabaseReference mUsers;
+    public DatabaseReference mJobs;
 
 
     public DH(){
@@ -83,9 +87,27 @@ public class DH {
         mUsers.child(userKey).child("phone").setValue(phone);
 
         mUsers.child(userKey).child("userSkills").child("NONE").setValue(false);
-        for(String skill : skills){
+        for(final String skill : skills){
             mUsers.child(userKey).child("userSkills").child(skill).setValue(true);
-            mSkillMapUsers.child(skill).child(userKey).setValue(true);
+            DatabaseReference ref = mSkillMapUsers.child(skill).child("count");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    long skillCount = 0;
+                    if(dataSnapshot.getValue()!=null){
+                        skillCount = (long) dataSnapshot.getValue();
+                    }
+                    Log.d("fatDebug", "Skill is "+ skill);
+                    mSkillMapUsers.child(skill).child("count").setValue(skillCount + 1);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("fatDebug", "skill retrieval canceled");
+                    throw databaseError.toException();
+                }
+            });
+            mSkillMapUsers.child(skill).child("userKeys").child(userKey).setValue(true);
         }
 
         mUsers.child(userKey).child("userOldJobs").child("NONE").setValue(false);
@@ -117,9 +139,27 @@ public class DH {
         mJobs.child(jobKey).child("longitude").setValue(longitude);
 
         mJobs.child(jobKey).child("jobSkills").child("NONE").setValue(false);
-        for(String skill : skills){
+        for(final String skill : skills){
             mJobs.child(jobKey).child("jobSkills").child(skill).setValue(true);
-            mSkillMapJobs.child(skill).child(jobKey).setValue(true);
+            DatabaseReference ref = mSkillMapJobs.child(skill).child("count");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    long skillCount = 0;
+                    if(dataSnapshot.getValue()!=null){
+                        skillCount = (long) dataSnapshot.getValue();
+                    }
+                    Log.d("fatDebug", "Skill is "+ skill);
+                    mSkillMapJobs.child(skill).child("count").setValue(skillCount + 1);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("fatDebug", "skill retrieval canceled");
+                    throw databaseError.toException();
+                }
+            });
+            mSkillMapJobs.child(skill).child("jobKeys").child(jobKey).setValue(true);
         }
 
         // Taker = person who accepted the job. If it is true, the job is removed from "active Jobs"
@@ -164,6 +204,8 @@ public class DH {
             Log.i("myTag", "onDataChange:" + end);
             return end;
         }
+
+
 
 
     public void acceptJob(){
