@@ -47,6 +47,7 @@ public class DH {
     public DatabaseReference mActiveJobs;
     public DatabaseReference mUsers;
     public DatabaseReference mJobs;
+    public DatabaseReference mMatches;
 
 
     public DH(){
@@ -57,6 +58,7 @@ public class DH {
         mSkillMapUsers = mDatabase.getReference("SkillMapUsers");
         mSkillMapJobs = mDatabase.getReference("SkillMapJobs");
         mActiveJobs = mDatabase.getReference("ActiveJobs");
+        mMatches = mDatabase.getReference("Matches");
 
     }
 
@@ -208,13 +210,7 @@ public class DH {
 
 
 
-    public void acceptJob(String jobID){
-        // Job is taken off ActiveJobs
-    }
 
-    public void acceptUser(String userID){
-
-    }
 
 
     public void updateUser(){

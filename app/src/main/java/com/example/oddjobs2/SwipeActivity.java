@@ -94,6 +94,7 @@ public class SwipeActivity extends AppCompatActivity {
     private String userJobKey;
 
     private boolean lookingForJob;
+    private String currentKey;
 
 
     @Override
@@ -110,6 +111,7 @@ public class SwipeActivity extends AppCompatActivity {
         userJobLatitude = 0;
         userJobLongitude = 0;
         userJobKey = "";
+        currentKey = "";
 
         lookingForJob = false;
 
@@ -436,6 +438,7 @@ public class SwipeActivity extends AppCompatActivity {
         if(maxKey.equals("default")){
             generateLayout(null);
         }
+        currentKey = maxKey;
 
         final DH dh = new DH();
         DatabaseReference ref = dh.mJobs.child(maxKey);
@@ -546,6 +549,7 @@ public class SwipeActivity extends AppCompatActivity {
         if(maxKey.equals("default")){
             generateLayout(null);
         }
+        currentKey = maxKey;
 
         final DH dh = new DH();
         DatabaseReference ref = dh.mUsers.child(maxKey);
@@ -703,7 +707,20 @@ public class SwipeActivity extends AppCompatActivity {
                         // https://stackoverflow.com/questions/3053761/reload-activity-in-android
 
                         finish();
+
+                        if(!currentKey.equals("")){
+                            if(lookingForJob){
+                                acceptJob(FirebaseAuth.getInstance().getCurrentUser().getUid(),currentKey);
+                            }
+                            else{
+                                acceptUser(userJobKey, currentKey);
+                            }
+                        }
+
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        Intent myIntent = getIntent();
+                        myIntent.putStringArrayListExtra("seenKeys", new ArrayList<String>(seenKeys));
+
                         startActivity(getIntent());
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         Toast.makeText(SwipeActivity.this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
@@ -744,6 +761,54 @@ public class SwipeActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
     // Source end
+
+    public void acceptJob(final String myUid, final String theirJobID){
+        // Job is taken off ActiveJobs
+        final DH dh = new DH();
+        dh.mMatches.child(myUid + theirJobID).setValue(true);
+        //check if reverse exists
+
+        DatabaseReference exists = dh.mMatches.child(theirJobID + myUid);
+        exists.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+               if(dataSnapshot.exists()) {
+                   // Matched!
+                   dh.mJobs.child(theirJobID).child("jobTakerKey").setValue(myUid);
+                   dh.mUsers.child(myUid).child("userCurrentJob").setValue(theirJobID);
+               }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
+
+    public void acceptUser(final String myJobID, final String theirUid){
+        final DH dh = new DH();
+        dh.mMatches.child(myJobID + theirUid).setValue(true);
+
+        DatabaseReference exists = dh.mMatches.child(theirUid + myJobID);
+        exists.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    // Matched!
+                    dh.mJobs.child(myJobID).child("jobTakerKey").setValue(theirUid);
+                    dh.mUsers.child(theirUid).child("userCurrentJob").setValue(myJobID);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
 
 
 
