@@ -41,7 +41,7 @@ public class ViewProfile extends AppCompatActivity implements View.OnClickListen
     DH dh = new DH();
     Boolean editMode = false;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String userid = user.getUid();
+    String userid;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();;
     private DatabaseReference mActiveUsers = mDatabase.getReference("Users");
     StorageReference mStorageRef;
@@ -49,9 +49,24 @@ public class ViewProfile extends AppCompatActivity implements View.OnClickListen
     private Uri mImage;
     private static final int UPLOAD_RESULT = 1;
 
+    private boolean externUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userid = user.getUid();
+        externUser = false;
+        final Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            userid = extras.getString("user");
+            externUser = true;
+            Log.d("fatDebug", "extern User id: " + userid);
+
+        }
+        else{
+            Log.d("fatDebug", "extras returned null");
+        }
+
         setContentView(R.layout.activity_view_profile);
         mStorageRef = FirebaseStorage.getInstance().getReference("images");
         profilePicture = (ImageView) findViewById((R.id.profilePicture));
@@ -109,9 +124,22 @@ public class ViewProfile extends AppCompatActivity implements View.OnClickListen
         lname.setVisibility(view.VISIBLE);
         age.setVisibility(view.VISIBLE);
         location.setVisibility(view.VISIBLE);
-        email.setVisibility(view.VISIBLE);
+        if(externUser){
+            email.setVisibility(view.GONE);
+        }
+        else{
+            email.setVisibility(view.VISIBLE);
+        }
+
         phone.setVisibility(view.VISIBLE);
-        edit.setVisibility(view.VISIBLE);
+
+        if(externUser){
+            edit.setVisibility(view.GONE);
+        }
+        else{
+            edit.setVisibility(view.VISIBLE);
+        }
+
 
         save.setVisibility(view.GONE);
         eName.setVisibility(view.GONE);

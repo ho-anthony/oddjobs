@@ -134,6 +134,9 @@ public class SwipeActivity extends AppCompatActivity {
                 ArrayList<String> seenKeysArray = extras.getStringArrayList("seenKeys");
                 seenKeys = new HashSet<String>(seenKeysArray);
             }
+            if(extras.getString("userChoice").equals("workSearch")) {
+                lookingForJob = true;
+            }
 
             initiateUserData(); //should be called after seenKeys is set.
             //https://stackoverflow.com/questions/41664409/wait-for-5-seconds/41664445
@@ -148,7 +151,7 @@ public class SwipeActivity extends AppCompatActivity {
                         // Pull user data in check active job method
                     }
                     else if(extras.getString("userChoice").equals("workSearch")){
-                        lookingForJob = true;
+
                         pullJobData();
                         //https://stackoverflow.com/questions/41664409/wait-for-5-seconds/41664445
                         //TODO: FIX THIS HARDCODED WAIT
@@ -200,7 +203,7 @@ public class SwipeActivity extends AppCompatActivity {
                     }
                     else if(data.getKey().equals("userCurrentJob")){
                         userJobKey = data.getValue().toString();
-
+                        Log.d("fatDebug", "user job key is: " + userJobKey);
                         if(!userJobKey.equals("NONE")){
                             seenKeys.add(userJobKey);
                             DatabaseReference userJobRef = dh.mJobs.child(userJobKey);
@@ -216,7 +219,24 @@ public class SwipeActivity extends AppCompatActivity {
                                         else if(data.getKey().equals("longitude")){
                                             userJobLongitude = (double)data.getValue();
                                         }
-                                        // TODO: Implement job poster job taker stuff
+                                        else if(data.getKey().equals("jobPosterKey")){
+                                            jobPoster = data.getValue().toString();
+                                        }
+                                        else if(data.getKey().equals("jobTakerKey")){
+                                            jobTaker = data.getValue().toString();
+                                        }
+                                    }
+                                    if(!jobPoster.equals("") && !jobTaker.equals("")){
+                                        // Matched!
+                                        Intent i = new Intent(getApplicationContext(), ViewProfile.class);
+                                        if(lookingForJob){
+                                            i.putExtra("user", jobPoster);
+                                        }
+                                        else{
+                                            i.putExtra("user", jobTaker);
+                                        }
+                                        startActivity(i);
+
                                     }
                                 }
 
