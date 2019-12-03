@@ -226,7 +226,7 @@ public class SwipeActivity extends AppCompatActivity {
                                             jobTaker = data.getValue().toString();
                                         }
                                     }
-                                    if(!jobPoster.equals("") && !jobTaker.equals("")){
+                                    if(!jobPoster.equals("false") && !jobTaker.equals("false")){
                                         // Matched!
                                         Intent i = new Intent(getApplicationContext(), ViewProfile.class);
                                         if(lookingForJob){
@@ -942,6 +942,10 @@ public class SwipeActivity extends AppCompatActivity {
                     skills.addAll(mySkills);
                     dh.newJob(uid,t,d,newP,location,latitude,longitude,skills);
                     popupWindow.dismiss();
+                    Intent myIntent = getIntent();
+                    myIntent.putStringArrayListExtra("seenKeys", new ArrayList<String>(seenKeys));
+
+                    startActivity(getIntent());
                 }
             }
         });
