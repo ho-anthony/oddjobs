@@ -37,7 +37,7 @@ import java.util.Set;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int UPLOAD_RESULT = 1;
-    EditText firstName, lastName, age, phone, keyWords;
+    EditText firstName, lastName, age, phone;
     Button submit;
     ImageView profilePicture;
     Boolean picUploaded = false;
@@ -87,13 +87,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 location = place.getName();
                 latitude = place.getLatLng().latitude;
                 longitude = place.getLatLng().longitude;
-                Log.i("fatDebug", "Place: " + place.getName() + ", " + place.getLatLng());
-
             }
 
             @Override
             public void onError(Status status) {
-                Log.i("fatDebug", "An error occurred: " + status);
             }
         });
     }
@@ -139,7 +136,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         } else {
             Toast.makeText(this,"Please upload a picture and fill in all of your information",Toast.LENGTH_SHORT).show();
-            //Toast.makeText(this, mySkills.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -150,7 +146,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 age.toString().trim().equals("") ||
                 location.toString().trim().equals("") ||
                 phone.toString().trim().equals("")
-//                keyWords.toString().trim().equals("")]
                 ){
             return false;
         }

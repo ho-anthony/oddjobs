@@ -138,7 +138,6 @@ public class JobListActivity extends AppCompatActivity {
                 if(jobID.equals("NONE")){
                     return;
                 }
-                Log.i("myTag", "onDataChange:" + jobID);
                 DatabaseReference active = mJobs.child(jobID).child("active");
                 active.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -205,13 +204,11 @@ public class JobListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jobID = dataSnapshot.getValue(String.class);
-                Log.i("myTag", "onDataChange:" + jobID);
                 DatabaseReference active = mJobs.child(jobID).child("jobTitle");
                 active.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot1) {
                         String end = dataSnapshot1.getValue(String.class);
-                        Log.i("myTag", "onDataChange:"+end);
                         showListView(end, status, end, end);
                     }
 

@@ -207,12 +207,6 @@ public class DH {
             return end;
         }
 
-
-
-
-
-
-
     public void updateUser(){
         // make sure to remove the skill mappings in the SkillMapUsers if user skills change
     }

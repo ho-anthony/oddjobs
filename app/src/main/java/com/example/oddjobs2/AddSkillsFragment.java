@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,12 +100,10 @@ public class AddSkillsFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText)
             {
-                Log.d("fatDebug", newText);
                 skillSuggestionsListFiltered.clear();
                 for(String skill: skillSuggestionsList){
 
                     if(skill.contains(newText)){
-                        Log.d("fatDebug", skill);
                         skillSuggestionsListFiltered.add(skill);
                     }
                 }
@@ -134,14 +131,12 @@ public class AddSkillsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
-                    Log.d("fatDebug", data.getKey());
                     skillSuggestionsList.add(0, data.getKey());
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -165,7 +160,6 @@ public class AddSkillsFragment extends Fragment {
         }
         return true; //always true for now
     }
-
 
     @SuppressLint("ResourceAsColor")
     public void updateSkillSet(String query){
@@ -213,8 +207,6 @@ public class AddSkillsFragment extends Fragment {
         }
 
     }
-
-
 
     @Override
     public void onAttach(Context context) {

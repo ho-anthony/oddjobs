@@ -49,29 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         signUpButton = findViewById(R.id.signUpButton);
         firebaseProgress = findViewById(R.id.firebaseProgress);
         databaseHelper = new DH();
-    /*    // SAMPLE DATABASE HELPER TEST
-
-        ArrayList<String> mySkills = new ArrayList<String>();
-        mySkills.add("carpentry");
-        mySkills.add("guitar");
-        mySkills.add("competitive eating");
-        dh.newUser(
-                "rando",
-                "Bob",
-                "Marley",
-                "myBio",
-                0,
-                0,
-                mySkills
-                );
-        dh.newJob(
-                "rando",
-                "baker",
-                "buns",
-                20,
-                "here",
-                mySkills
-        );*/
     }
 
     public void loginClicked(View v) {

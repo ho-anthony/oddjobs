@@ -21,21 +21,15 @@ public class DecisionActivity extends AppCompatActivity {
 
     public void navWorkRequest(View v) {
         //Toast.makeText(this, "Navigates to employer screen", Toast.LENGTH_SHORT).show();
-
         Intent i = new Intent(this, SwipeActivity.class);
         i.putExtra("userChoice", "workRequest");
         startActivity(i);
-
-
     }
 
     public void navWorkSearch(View v) {
         //Toast.makeText(this,"Navigates to employee screen", Toast.LENGTH_SHORT).show();
-
         Intent i = new Intent(this, SwipeActivity.class);
         i.putExtra("userChoice", "workSearch");
         startActivity(i);
-
-
     }
 }

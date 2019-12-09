@@ -203,7 +203,6 @@ public class SwipeActivity extends AppCompatActivity {
                     }
                     else if(data.getKey().equals("userCurrentJob")){
                         userJobKey = data.getValue().toString();
-                        Log.d("fatDebug", "user job key is: " + userJobKey);
                         if(!userJobKey.equals("NONE")){
                             seenKeys.add(userJobKey);
                             DatabaseReference userJobRef = dh.mJobs.child(userJobKey);
@@ -294,17 +293,14 @@ public class SwipeActivity extends AppCompatActivity {
         // TODO: Get skills that user requires
         // TODO: query job to skill mapping for all available jobs
         // TODO: sort jobs based on how many times they're seen.
-        Log.d("fatDebug", "Pulling job data");
         final DH dh = new DH();
         String userKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d("fatDebug", "user job key is " + userJobKey);
         Query qSkills = dh.mJobs.child(userJobKey).child("jobSkills");
         qSkills.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     String skill = data.getKey();
-                    Log.d("fatDebug", "user skill: "+skill);
 
 
                     Query mappingsToJobs = dh.mSkillMapUsers.child(skill).child("userKeys");
@@ -322,18 +318,15 @@ public class SwipeActivity extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         String userKey = dataSnapshot.getKey();
                                         if (keys.containsKey(userKey)) {
-                                            Log.d("fatDebug", "Incremented key");
                                             Integer oldVal = keys.get(userKey);
                                             keys.put(userKey, new Integer(oldVal.intValue() + 1));
                                         } else {
-                                            Log.d("fatDebug", "added New Key");
                                             keys.put(userKey, new Integer(0));
                                         }
                                     }
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Log.d("fatDebug", "skill mapping retrieval canceled");
                                         throw databaseError.toException();
                                     }
 
@@ -345,7 +338,6 @@ public class SwipeActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Log.d("fatDebug", "skill mapping retrieval canceled");
                             throw databaseError.toException();
                         }
                     });
@@ -357,7 +349,6 @@ public class SwipeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -367,7 +358,6 @@ public class SwipeActivity extends AppCompatActivity {
         // TODO: Get skills that user requires
         // TODO: query job to skill mapping for all available jobs
         // TODO: sort jobs based on how many times they're seen.
-        Log.d("fatDebug", "Pulling job data");
         final DH dh = new DH();
         String userKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Query qSkills = dh.mUsers.child(userKey).child("userSkills");
@@ -376,9 +366,6 @@ public class SwipeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     String skill = data.getKey();
-                    Log.d("fatDebug", "user skill: "+skill);
-
-
                         Query mappingsToJobs = dh.mSkillMapJobs.child(skill).child("jobKeys");
                         mappingsToJobs.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -393,18 +380,15 @@ public class SwipeActivity extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             String jobKey = dataSnapshot.getKey();
                                             if (keys.containsKey(jobKey)) {
-                                                Log.d("fatDebug", "Incremented key");
                                                 Integer oldVal = keys.get(jobKey);
                                                 keys.put(jobKey, new Integer(oldVal.intValue() + 1));
                                             } else {
-                                                Log.d("fatDebug", "added New Key");
                                                 keys.put(jobKey, new Integer(0));
                                             }
                                         }
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            Log.d("fatDebug", "skill mapping retrieval canceled");
                                             throw databaseError.toException();
                                         }
 
@@ -416,7 +400,6 @@ public class SwipeActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                Log.d("fatDebug", "skill mapping retrieval canceled");
                                 throw databaseError.toException();
                             }
                         });
@@ -428,7 +411,6 @@ public class SwipeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -436,7 +418,6 @@ public class SwipeActivity extends AppCompatActivity {
 
     public void displayJobKeys(){
         //TODO: KEEP IT SORTED TO BEGIN WITH INSTEAD OF ITERATING EACH TIME.
-        Log.d("fatDebug", "displayKeys called");
          int maxKeyValue = -1;
          String maxKey = "default";
          Object[] keyArray = keys.keySet().toArray();
@@ -450,9 +431,6 @@ public class SwipeActivity extends AppCompatActivity {
 
              }
          }
-
-
-         Log.d("fatDebug", maxKey);
          //TODO: GENERATE LAYOUT HERE
 
         if(maxKey.equals("default")){
@@ -517,7 +495,6 @@ public class SwipeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -537,7 +514,6 @@ public class SwipeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -547,7 +523,6 @@ public class SwipeActivity extends AppCompatActivity {
 
     public void displayUserKeys(){
         //TODO: KEEP IT SORTED TO BEGIN WITH INSTEAD OF ITERATING EACH TIME.
-        Log.d("fatDebug", "displayKeys called");
         int maxKeyValue = -1;
         String maxKey = "default";
         Object[] keyArray = keys.keySet().toArray();
@@ -562,8 +537,6 @@ public class SwipeActivity extends AppCompatActivity {
             }
         }
 
-
-        Log.d("fatDebug", maxKey);
         //TODO: GENERATE LAYOUT HERE
 
         if(maxKey.equals("default")){
@@ -628,7 +601,6 @@ public class SwipeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -648,7 +620,6 @@ public class SwipeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("fatDebug", "skill retrieval canceled");
                 throw databaseError.toException();
             }
         });
@@ -829,36 +800,6 @@ public class SwipeActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

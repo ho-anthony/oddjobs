@@ -60,13 +60,7 @@ public class ViewProfile extends AppCompatActivity implements View.OnClickListen
         if(extras != null) {
             userid = extras.getString("user");
             externUser = true;
-            Log.d("fatDebug", "extern User id: " + userid);
-
         }
-        else{
-            Log.d("fatDebug", "extras returned null");
-        }
-
         setContentView(R.layout.activity_view_profile);
         mStorageRef = FirebaseStorage.getInstance().getReference("images");
         profilePicture = (ImageView) findViewById((R.id.profilePicture));
