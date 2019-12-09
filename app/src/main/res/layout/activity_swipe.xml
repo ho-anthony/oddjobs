@@ -26,6 +26,7 @@
                 android:id="@+id/swipe_profile_pic"
                 style="@style/RoundProfile"
                 android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
             <LinearLayout

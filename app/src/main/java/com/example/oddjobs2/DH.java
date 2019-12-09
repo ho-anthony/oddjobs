@@ -99,13 +99,11 @@ public class DH {
                     if(dataSnapshot.getValue()!=null){
                         skillCount = (long) dataSnapshot.getValue();
                     }
-                    Log.d("fatDebug", "Skill is "+ skill);
                     mSkillMapUsers.child(skill).child("count").setValue(skillCount + 1);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.d("fatDebug", "skill retrieval canceled");
                     throw databaseError.toException();
                 }
             });
@@ -157,7 +155,6 @@ public class DH {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.d("fatDebug", "skill retrieval canceled");
                     throw databaseError.toException();
                 }
             });
@@ -182,13 +179,11 @@ public class DH {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String jobID = dataSnapshot.getValue(String.class);
-                    Log.i("myTag", "onDataChange:" + jobID);
                     DatabaseReference active = mJobs.child(jobID).child("active");
                     active.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
                             end = dataSnapshot1.getValue(Boolean.class);
-                            Log.i("myTag", "onDataChange:" + end);
                         }
 
                         @Override
@@ -203,7 +198,6 @@ public class DH {
                     throw databaseError.toException();
                 }
             });
-            Log.i("myTag", "onDataChange:" + end);
             return end;
         }
 

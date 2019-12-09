@@ -852,13 +852,11 @@ public class SwipeActivity extends AppCompatActivity {
                 location = place.getName();
                 latitude = place.getLatLng().latitude;
                 longitude = place.getLatLng().longitude;
-                Log.i("fatDebug", "Place: " + place.getName() + ", " + place.getLatLng());
 
             }
 
             @Override
             public void onError(Status status) {
-                Log.i("fatDebug", "An error occurred: " + status);
             }
         });
 
@@ -911,7 +909,6 @@ public class SwipeActivity extends AppCompatActivity {
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            Log.d("fatDebug", "runnable running");
                             // TODO: ASSUMING KEYS IS POPULATED
                             displayUserKeys();
                         }
