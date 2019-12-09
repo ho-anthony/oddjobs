@@ -158,7 +158,7 @@ public class SwipeActivity extends AppCompatActivity {
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             public void run() {
-                                Log.d("fatDebug", "runnable running");
+                                //Log.d("fatDebug", "runnable running");
                                 // TODO: ASSUMING KEYS IS POPULATED
                                 displayJobKeys();
                             }
